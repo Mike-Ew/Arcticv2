@@ -1,0 +1,608 @@
+PAPER
+
+Monitoring Polar Sea Ice Using Optical
+and SAR Data
+AUTHORS
+Hequan Sun
+Dalian Naval Academy,
+Dalian, China
+Chunhua Li
+Key Laboratory of Research on
+Marine Hazards Forecasting,
+National Marine Environmental
+Forecasting Center, Beijing, China
+Yifeng Cheng
+Dalian Naval Academy,
+Dalian, China
+
+Introduction
+
+P
+
+olar sea ice forms an interface
+between the upper part of the ocean
+and the lower part of the atmosphere.
+Sea ice changes the radiation balance
+and energy balance on the ocean surface and isolates the heat exchange
+and water vapor exchange between
+the ocean and the atmosphere. The
+freezing and thawing process of sea
+ice affects the formation and intensity
+of ocean currents. Polar sea ice plays
+an important role in the global climate system.
+Meanwhile, sea ice is a major barrier for ship trafﬁc in the polar area.
+Sea ice ﬂoes are dangerous for most
+ships and ﬁshing vessels. It is also difﬁcult for icebreakers and ice-strengthened vessels to navigate the area with
+high sea ice concentration and thick
+ice. One typical case is that Chinese
+icebreaking research vessel Snow
+Dragon, which was trapped in thick
+ice ﬂoes during an international Antarctic rescue mission in January 2014.
+With the opening of the polar ship-
+
+ABSTRACT
+With the movement and destructiveness of sea ice, conventional in situ instruments are restricted or unavailable for polar sea ice observation. Satellite remote
+sensing is a feasible way to monitor sea ice in the polar area. Multispectral imaging spectrometer and synthetic aperture radar are applied to monitoring the sea
+ice in this article with high spatial resolution, wide swath, and continuous imaging.
+The sea ice distribution and motion can be measured by analyzing satellite remote
+sensing images. The image segmentation method is presented in the article to
+obtain the sea ice distribution. Meanwhile, the cross-correlation algorithm to
+extract sea ice motion is proposed as well as the processed vector results.
+Keywords: remote sensing, sea ice concentration, sea ice motion, image segmentation, cross-correlation
+
+ping routes and polar resource utilization, more attention is paid to navigation safety in the polar area, and polar
+ice monitoring is one of the important factors.
+Because of the low temperature,
+strong winds, and the movement and
+potential destructive nature of sea ice
+ﬂoes, conventional in situ oceanographic
+measuring techniques are restricted or
+unavailable in the polar area. Under
+these circumstances satellite remote
+sensing is the only feasible method to
+monitor the ocean parameters with
+high spatial resolution. Polar ice parameters such as ice concentration,
+ice thickness, ice surface temperature,
+ice emissivity, snow on ice, sea ice
+drift, and so on, can be observed or
+estimated by remote sensing sensors
+such as multispectral imaging spectrometers, microwave radiometers,
+microwave scatterometers, radar altimeters, synthetic aperture radar
+(SAR), and so forth. Meanwhile,
+the polar area can be mapped in overlap mode by the sun-synchronous
+
+polar orbiting satellite, and data
+with higher sampling frequency and
+ﬁne grid can be obtained than that
+in low latitudes.
+The sea ice distribution and its
+concentration can be calculated by
+applying image segmentation methods
+to satellite images. The sea ice motion
+can be estimated by analyzing the
+satellite remote sensing images with
+motion estimation methods (Flores
+et al., 1995; Liu & Zhao, 1999;
+Thomas et al., 2008, 2011; Hollands
+& Dierking, 2011; Sun et al., 2015).
+In this article, the image segmentation method and motion estimation
+method are presented in detail, and
+some optical and SAR satellite remote
+sensing images are provided to validate the performance of the proposed
+methods.
+
+Basics
+
+Sea Ice Segmentation Algorithm
+Since there is a signiﬁcant difference in color, intensity, and reﬂectivity
+
+November/December 2019
+
+Volume 53
+
+Number 6
+
+35
+
+between sea ice and sea water/land, sea ice can be discriminated in satellite images by using image segmentation
+methods, and sea ice distribution and concentration can be calculated.
+Optimal thresholding segmentation is an effective tool to separate the object from the background in image processing.
+The effect of image segmentation depends on the choice of threshold value. The Otsu method based on discriminant
+analysis is one of the most popular classical segmentation algorithms, which maximizes the gray level histogram variance
+to obtain the best separation of classes (Otsu, 1979; Xu et al., 2011).
+Let the satellite image histogram be represented in L levels: [gmin, gmin þ δg, Λ, gmax], where gmin is the gray level
+gmax  gmin
+minimum, g max is the gray level maximum, and δg ¼
+. The probability of occurrence at the ith level is
+L1
+L
+
+
+ni
+≥ 0 and ∑ pi ¼ 1, where ni is the number of gray level values located in gmin þ ði  1Þ ⋅ δg ; gmin þ i ⋅ δg and
+pi ¼
+N
+i¼1
+N is the total number of image pixels.
+Suppose that the satellite image pixels can be dichotomized into two classes, C0 and C1 (background and sea ice), by a
+threshold up to kth level, C0 and C1 denotes the satellite image pixels with levels [gmin, gmin þ δ g, Λ, gmin þ (k  1) ⋅ δg] and [gmin +
+k
+
+k ⋅ δg, Λ, gmax], respectively. The probability of occurrence and the histogram mean of class C0 are ωðk Þ ¼ Pr ðC0 Þ ¼ ∑ pi
+k
+
+L
+
+i¼1
+
+and μðk Þ ¼ ∑ ði ⋅ pi Þ, and the total histogram mean is μT ¼ ∑ ði ⋅pi Þ, respectively.
+i¼1
+i¼1
+½μ ⋅ ωðk Þ  μðk Þ2
+2 
+The optimal level k* meets the relationship of σB ðk Þ ¼ max T
+, and the threshold value to dichot1≤k<L ωðk Þ⋅½1  ωðk Þ
+omize the background and sea ice is given as gt = gmin + (k*  1) ⋅ δg.
+Sea ice segmentation from the satellite image involves two steps. In the ﬁrst step, median ﬁltering is applied to the image for
+reducing pepper noise. Second, the Otsu segmentation method is applied in calculating the threshold value, and the satellite
+image is separated into two parts by comparing the pixel value with the threshold .
+
+Sea Ice Motion Estimation Method
+
+The sea ice velocity ﬁeld can be estimated from the displacements of the sea ﬂoes in two images between two instances of
+time. Since an individual ﬂoe cannot be detected easily and accurately in the remote sensing images, the subarea matching is
+adopted in this article. The sea ice motion estimation methods include cross-correlation methods (Thomas et al., 2008; Hollands
+& Dierking, 2011; Sun et al. 2015) and optical ﬂow methods (Gutierrez & Long, 2003; Bruhn et al., 2005; Sun et al., 2016).
+According to the authors’ experience, cross-correlation methods are preferred because the sea ice ﬂoes can be treated as rigid
+objects. Meanwhile, optical ﬂow methods are quite time consuming.
+The subarea of the ﬁrst remote sensing image at t1 can be assumed as p(x, y) ¼ f (x, y) to represent the pixel intensity, and
+that of the second remote sensing image at t2 can be expressed as q(x, y) = f (x  Δx, y  Δy) with the displacement of (Δx, Δy).
+The cross-correlation function of p(x, y) and q(x, y), and the autocorrelation function of f (x, y) are deﬁned as
+
+
+
+
+
+
+þ∞ þ∞
+rpq τ x;τy ¼ ∫−∞
+∫−∞ pðx; y Þ ⋅ q x þ τ x ; y þ τ y dxdy
+:
+þ∞ þ∞
+∫−∞ f ðx; y Þ ⋅ f x þ τ x ; y þ τ y dxdy
+rff τ x;τy ¼ ∫−∞
+
+ð1Þ
+
+Then,
+
+
+
+
+rpq τ x ; τ y ¼ rff τ x  Δx; τ y  Δy
+
+ð2Þ
+
+Because any autocorrelation function is even and the maximum value is located at the original point, the inequality can be
+derived as rpq (τx, τy) ≤ rpq (Δx, Δy). The displacement during Δt = t2 – t1 can be estimated to be (Δx, Δy) from the
+maximum position of the cross-correlation function. Scaling this displacement with the geographical factor, the sea ice
+motion can be calculated quantitatively. The cross-correlation can be implemented efﬁciently by the fast Fourier transform
+or the fast Hartley transform (Sun, 2002) as demonstrated below.
+
+36
+
+Marine Technology Society Journal
+
+Fast Algorithm of Cross-Correlation
+
+With the kernel function cas(ωt) ¼ cos(ωt) þ sin(ωt), the two-dimensional
+Hartley transform and its inverse transform with the odd and even parts are
+deﬁned as
+
+
+þ∞ þ∞
+P ðu; v Þ ¼ ∫−∞
+∫−∞ pðx; yÞcasðuxÞcasðvyÞdxdy
+:
+þ∞ þ∞
+pðx; y Þ ¼ ∫−∞ ∫−∞ P ðu; vÞcasðuxÞcasðvyÞdudv
+
+8
+1
+>
+< Po ðu; v Þ ¼ ½P ðu; v Þ  P ð−u; −v Þ
+2
+:
+1
+>
+: Pe ðu; v Þ ¼ ½P ðu; v Þ þ P ð−u; −v Þ
+2
+
+ð3Þ
+
+ð4Þ
+
+The cross-correlation operation in the temporal domain is equivalent to the
+arithmetic operation in the Hartley domain (Sun, 2002),
+RH ðu; v Þ ¼ PHe ðu; v ÞQHe ðu; v Þ  PHo ð−u; v ÞQHo ðu; −v Þ
+þ PHe ð−u; v ÞQHo ðu; v Þ  PHo ðu; v ÞQHe ðu; −v Þ;
+
+ð5Þ
+
+where RH (u, v), PH (u, v), and QH (u, v) are the Hartley transform of rpq (τx, τy),
+p(x, y), and q(x, y) in Eq. (1), respectively, and the sufﬁx o and e indicate the odd
+and even parts deﬁned in Eq. (4). The cross-correlation can be calculated by two
+forward transforms and one inverse transform.
+
+Satellite Data and Preprocessing Operation
+There are two types of remote sensing images that can be used for highresolution sea ice analysis—one is the optical and infrared remote sensing
+image, and the other is SAR image. The optical and infrared images used
+in the article can be accessed from LANCE-MODIS (Land, Atmosphere
+FIGURE 1
+Optical images obtained from MODIS/Terra: (a) Arctic_r05c03.2018222.terra.250m and
+(b) Arctic_r05c03.2018223.terra.250m.
+
+Near Real-Time Capability for
+EOS–Moderate Resolution Imaging
+Spectroradiometer) data system
+operated by the GSFC Terrestrial
+Information Systems Laboratory
+(LANCE-MODIS, 2018), and the
+SAR images can be accessed from
+Polar View (Karvonen et al., 2007),
+which is the organization for the provision of operational, satellite-based
+monitoring of the polar regions and
+the cryosphere (Polar View, 2018).
+
+Optical Data
+LANCE-MODIS can provide
+near-real-time optical and infrared
+MODIS data sampled by Aqua and
+Terra, and true-color or pseudocolor
+images can be generated by choosing
+different spectrometer bands. Polar
+View is an international consortium
+providing a wide variety of satellite
+earth observation products in the
+polar region and parts of midlatitude regions that monitor sea ice
+cover, glacier runoff, snow cover,
+snow melt, icebergs, river ice, and
+lake ice. Accurate and real-time
+cost-saving information can be
+found at the Polar View website
+(http://polarview.org/).
+True-color MODIS images with
+the spatial resolution of 250 m, captured on August 10 and 11, 2018
+(source: http://lance-modis.eosdis.
+nasa.gov), is shown in Figure 1,
+and the map coordinate system is
+WGS 1984 NSIDC Sea Ice Polar
+Stereographic North.
+
+SAR Data
+SAR instruments can work at all
+weather, day and night, and the optical payloads can only observe the sea
+surface with good lighting conditions,
+without cloud contamination. It is
+clear that the quality of SAR sea ice
+November/December 2019
+
+Volume 53
+
+Number 6
+
+37
+
+FIGURE 2
+SAR images obtained from Radarsat2: (a) generated at 20140412 01:35:57 and (b) generated at
+20140413 04:24:37.
+
+FIGURE 3
+Geographical matched SAR images in Figure 2: (a) generated at 20140412 01:35:57 and
+(b) generated at 20140413 04:24:37.
+
+FIGURE 4
+MODIS image segmentation performed on image in Figure 1: (a) image segmentation in Figure 1
+(a) and (b) image segmentation in Figure 1(b).
+
+38
+
+Marine Technology Society Journal
+
+images is better than that of MODIS
+images.
+High-resolution SAR images can be
+downloaded from http://www.
+polarview.aq. The images provided by
+the website have been calibrated, and
+up-to-the-minute images are provided.
+The images are categorized according
+to the region, time sequence, and so
+on (Polar View, 2018). Two SAR
+images generated by Radarsat2 are
+illustrated in Figure 2, where the
+giant white object is a grounded
+iceberg named as A23A with a size as
+large as 44 × 40 nautical miles. The
+map coordinate system is WGS 1984
+Antarctic Polar Stereographic.
+
+Geographical Matching
+There is a little difference between
+Figures 1 and 2. The geographical
+matching operation is applied to
+Figure 2 to get the same region
+with the same spatial resolution for
+the next sea ice motion estimation.
+The images in Figure 2 with the overlapped area can be used to calculate
+the sea ice motion vectors. The map
+overlaid with latitude and longitude
+lines can be extracted from the satellite image, which is orthogonal to
+each other. Concerned as X- junctions
+(Chu et al., 2013; Pham et al., 2014;
+Hansard et al., 2014), the intersections of the map lines in Figure 2
+can be detected automatically and accurately for matching and zooming
+the satellite images. The geographical matched images are illustrated
+in Figure 3.
+During software implementation,
+a grid of interrogation areas is built
+with the same size within each satellite image. The size of the interrogation area is set to be greater than
+twice the estimated sea ice displacement. The corresponding interrogation areas are then processed quickly
+
+FIGURE 5
+SAR image segmentation performed on image in Figure 3: (a) image segmentation in Figure 3(a)
+and (b) image segmentation in Figure 3(b).
+
+and clouds cannot be distinguished by
+the Otsu segmentation method. The
+SAR image segmentation is not affected by clouds or other atmospheric
+phenomena. According to the segmentation results, the size distribution and concentration of sea ice can
+be calculated easily for operational
+application.
+
+Sea Ice Motion
+
+with the help of the fast algorithm of
+cross-correlation, and the mean velocity
+between two interrogation areas is obtained. This process is repeated at each
+grid point within the satellite images,
+resulting in a map of velocity vectors
+to describe the polar sea ice motion.
+
+Results
+Applying the segmentation and
+cross-correlation methods described
+
+in the previous section to the remote
+sensing sea ice images, the sea ice
+distribution and motion can be
+obtained.
+
+Applying cross-correlation method to MODIS images in Figure 1
+and SAR images in Figure 3, the
+velocity vector maps can be calculated
+as illustrated in Figures 6 and 7. It is
+obvious that the mesoscale sea ice dipole vortex and dynamic eddy can be
+discovered with the detailed information in Figures 6 and 7.
+
+Sea Ice Distribution
+
+Validation
+
+The segment ati on r es ul ts of
+MODIS and SAR images in Figures 1
+and 3 are illustrated in Figures 4 and 5
+with the latitude and longitude labels.
+There are some fake regions in Figure 4
+because the difference between sea ice
+
+The long-term drift of sea ice in
+polar regions has been introduced in
+many earlier studies (Emery et al.,
+1997; Holland & Kwok, 2012;
+Kwok et al., 2013), and the results provided in the article are similar to the
+
+FIGURE 6
+
+FIGURE 7
+Velocity vector map of sea ice motion derived from Figure 1.
+
+Velocity vector map of sea ice motion derived from Figure 1.
+
+November/December 2019
+
+Volume 53
+
+Number 6
+
+39
+
+results in some previous literature from
+the trend of thesea ice drift. The validation is conducted with the medium resolution sea ice drift product from
+2018-08-10 05:37 to 2018-08-11
+05:16 in the Arctic region and the
+low-resolution sea ice drift product
+from 2014-04-12 12:00 to 2014-0414 12:00 in the Antarctic region of the
+EUMETSAT Ocean and Sea Ice Satellite Application Facility (http://www.
+osi-saf.org/), which the continuous
+maximum cross-correlation is applied
+to motion tracking (Lavergne et al.,
+2010). The sea ice drift products are
+illustrated in Figures 8 and 9 with the
+map coordinate system of Oblique
+Mercator projection.
+Comparing Figures 6 and 8 with
+Figures 7 and 9, the distribution of
+the sea ice drift velocity and direction
+are basically consistent, which can validate the reliability of the analysis results provided in the article.
+
+Conclusions and Prospects
+It is useful for navigation safety to
+monitor polar sea ice distribution and
+motion by analyzing satellite remote
+FIGURE 8
+OSI-SAF sea ice drift product in the Arctic
+region.
+
+sensing images. The sea ice distribution can be calculated by the image
+segmentation methods, and the sea
+ice motion can be derived by calculating the cross-correlation function of
+the satellite remote sensing images.
+The mesoscale sea ice dynamic phenomena can be inferred from the velocity vector map clearly with the
+detailed information, which is helpful
+for the study of polar sea ice dynamics.
+Compared with optical remote sensing
+images, the SAR images are more suitable for polar sea ice monitoring in the
+region covered by clouds and fog.
+Since the sea ice distribution and
+motion is caused by the topographic,
+atmospheric, and oceanic forcing, the
+results in a given polar area calculated
+by the proposed methods can be used
+as initial conditions and applied to the
+polar sea ice forecasting by combining
+numerical meteorological and oceanic
+modeling.
+
+Acknowledgments
+We acknowledge the use of data
+products or imagery from the Land,
+FIGURE 9
+OSI-SAF sea ice drift product in the Antarctic
+region.
+
+Atmosphere Near Real-Time Capability for EOS (LANCE) system operated
+by NASA’s Earth Science Data and Information System with funding provided by NASA Headquarters. We also
+acknowledge the use of data products
+or imagery from Polar View powered
+by PARABOLA and WORDPRESS.
+
+Corresponding Author:
+Hequan Sun
+Dalian Naval Academy
+No. 667 Jiefang Road,
+Zhongshan District
+Dalian 116018, China
+Email: hqsun@dlut.edu.cn
+
+References
+Bruhn, A., Weickert, J., & Schnörr, C. 2005.
+Lucas/Kanade meets Horn/Schunck: combining local and global optic ﬂow methods. Int J
+Comput Vision. 61(3):211-31. https://doi.
+org/10.1023/B:VISI.0000045324.43199.43.
+Chu, J., Guo, A., & Wang, L. 2013. Chessboard corner detection under image physical
+coordinate. Opt Laser Technol. 48:599-605.
+https://doi.org/10.1016/j.optlastec.2012.
+11.010.
+Emery, W.J., Fowler, C.W., & Maslanik, J.A.
+1997. Satellite-derived maps of Arctic and Antarctic sea ice motion: 1988 to 1994. Geophys
+Res Lett. 24(8):897-900. https://doi.org/10.
+1029/97GL00755.
+Flores, M., Maitre, H., & Parmiggiani, F. 1995.
+Sea-ice velocity ﬁelds estimation on Ross Sea
+with NOAA-AVHRR. IEEE T Geosci Remote. 33(5):1286-9. https://doi.org/10.1109/
+36.469494.
+Gutierrez, S., & Long, D.G. 2003. Optical
+ﬂow and scale-space theory applied to sea-ice
+motion estimation in Antarctica. In: Geoscience
+and Remote Sensing Symposium (pp. 2805-7).
+Toulouse, France: IEEE. https://doi.org/10.1109/
+IGARSS.2003.1294592.
+Hansard, M., Radu, H., Michel, A., &
+Evangelidis, G. 2014. Automatic detection
+
+40
+
+Marine Technology Society Journal
+
+of calibration grids in time-of-ﬂight images.
+Comput Vis Image Und. 121:108-18. https://
+doi.org/10.1016/j.cviu.2014.01.007.
+
+Polar View. 2018. Available at: http://www.
+polarview.aq (accessed December 20, 2018).
+
+Holland, P.R., & Kwok, R. 2012. Wind-driven
+trends in Antarctic sea-ice drift. Nat Geosci.
+5(11):872-5. https://doi.org/10.1038/ngeo1627.
+
+Sun, H. 2002. The Hartley transform applied
+to particle image velocimetry. Meas Sci
+Technol. 13:1996-2000. https://doi.org/10.1088/
+0957-0233/13/12/326.
+
+Hollands, T., & Dierking, W. 2011. Performance of a multiscale correlation algorithm for
+the estimation of sea-ice drift from SAR images:
+Initial results. Ann Glaciol. 52(57):311-7. https://
+doi.org/10.3189/172756411795931462.
+
+Sun, H., Song, Q., Shao, R., & Schlicke, T.
+2016. Estimation of sea surface currents based
+on ocean color remote-sensing image analysis.
+Int J Remote Sens. 37(21):5105-21. https://
+doi.org/10.1080/01431161.2016.1226526.
+
+Karvonen, J., Haapala, J., Lehtiranta, J., &
+Seina, A. 2007. Polarview@FIMR: WWWbased delivery of Baltic sea ice products to
+end-users. In: IEEE International Geoscience
+and Remote Sensing Symposium (IGARSS).
+pp. 1242-5. Barcelona, Spain: IEEE. https://
+doi.org/10.1109/IGARSS.2007.4423031.
+
+Sun, H., Wang, J., & Zhang, Z. 2015. Sea ice
+drift monitoring based on SAR imagery. Sea
+Technol. 56(5):45-7.
+
+Kwok, R., Spreen, G., & Pang, S. 2013. Arctic
+sea ice circulation and drift speed: Decadal
+trends and ocean currents. J Geophys Res
+Oceans. 118:2408-25. https://doi.org/10.1002/
+jgrc.20191.
+LANCE-MODIS. 2018. Available at: http://
+lance-modis.eosdis.nasa.gov/imagery/subsets/?
+mosaic=Arctic (accessed December 20, 2018).
+Lavergne, T., Eastwood, S., Teffah, Z.,
+Schyberg, H., & Breivik, L.-A. 2010. Sea ice
+motion from low resolution satellite sensors:
+An alternative method and its validation in
+the Arctic. J Geophys Res. 115:C10032.
+https://doi.org/10.1029/2009JC005958.
+
+Thomas, M., Geiger, C.A., & Kambhamettu,
+C. 2008. High resolution (400 m) motion
+characterization of sea ice using ERS-1 SAR
+imagery. Cold Reg Sci Technol. 52:207-23.
+https://doi.org/10.1016/j.coldregions.2007.
+06.006.
+Thomas, M., Kambhamettu, C., & Geiger, C.
+2011. Motion tracking of discontinuous sea
+ice. IEEE T Geosci Remote. 49(12):5064-79.
+https://doi.org/10.1109/TGRS.2011.2158005.
+Xu, X., Xu, S., Jin, L., & Song, E. 2011.
+Characteristic analysis of Otsu threshold
+and its applications. Pattern Recogn Lett.
+32:956-61. https://doi.org/10.1016/j.patrec.
+2011.01.021.
+
+Liu, A.K., & Zhao, Y. 1999. Arctic sea ice
+drift from wavelet analysis of NSCAT and special
+sensor microwave imager data. J Geophys Res.
+104(C5):11529-38. https://doi.org/10.1029/
+1998JC900115.
+Otsu, N. 1979. A threshold selection method
+from gray-level histograms. IEEE T Syst
+Man Cyb. 9(1):62-6. https://doi.org/10.1109/
+TSMC.1979.4310076.
+Pham, T.A., Delalandre, M., Barrat, S., &
+Ramel, J. Y. 2014. Accurate junction detection and characterization in line-drawing images. Pattern Recogn. 47:282-95. https://doi.
+org/10.1016/j.patcog.2013.06.027.
+
+November/December 2019
+
+Volume 53
+
+Number 6
+
+41
+
+

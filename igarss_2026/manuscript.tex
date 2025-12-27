@@ -1,0 +1,146 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{A Multimodal Transformer Model for Sea Ice Classification with Explainability using Satellite Imagery}
+
+\author{\IEEEauthorblockN{David Mike-Ewewie}
+\IEEEauthorblockA{\textit{Dept. of Computer Science} \\
+\textit{University of Texas Permian Basin}\\
+Odessa, USA \\
+mike\_d63291@utpb.edu}
+}
+
+\maketitle
+
+\begin{abstract}
+Accurate and automated sea ice classification is critical for climate monitoring and maritime safety in the Arctic, particularly as climate change accelerates ice retreat. While Synthetic Aperture Radar (SAR) is the operational standard due to its all-weather capability, it suffers from signal ambiguity and speckle noise. In this paper, we propose a novel Multimodal Temporal-Spatial Vision Transformer (TSViT) framework designed to resolve these ambiguities by fusing SAR with optical imagery and meteorological data. We present a rigorous data-centric methodology for establishing a robust foundation for this architecture, addressing critical issues in data splitting, labeling, and normalization. As a first step towards the full multimodal system, we validate the core SAR encoder using a ViT-Large architecture trained with Focal Loss. Our results demonstrate a test accuracy of 69.6\% and a weighted F1-score of 68.8\%, with a notable 83.9\% precision on the challenging Multi-Year Ice class. This work establishes a validated baseline and methodology for future multimodal integration, contributing to the future of Earth observation.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Sea Ice Classification, Multimodal Learning, Vision Transformers, Synthetic Aperture Radar, Explainable AI
+\end{IEEEkeywords}
+
+\section{Introduction}
+The Arctic is warming at nearly four times the global average, a phenomenon known as Arctic amplification. The rapid decline in sea ice extent has profound implications for the global climate system and has simultaneously opened new maritime routes for shipping and resource extraction. Operational ice charting, crucial for navigation safety, currently relies on manual analysis of satellite imagery---a labor-intensive process that struggles to scale with the increasing frequency of satellite acquisitions.
+
+Synthetic Aperture Radar (SAR), such as that from Sentinel-1, is the primary modality for ice monitoring due to its ability to image through clouds and polar darkness. However, SAR backscatter is highly ambiguous; different ice types (e.g., Young Ice vs. Multi-Year Ice) can exhibit similar intensity profiles depending on surface roughness and incidence angle \cite{zakhvatkina2019satellite} (Fig. \ref{fig:sar_vis}).
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=0.9\columnwidth]{images/seace.png}}
+\caption{Sentinel-1 SAR imagery showing the ambiguity of ice signatures. Texture and context are often more discriminative than pixel intensity alone.}
+\label{fig:sar_vis}
+\end{figure}
+
+To address these limitations, we propose a transition from single-modality CNNs to a \textbf{Multimodal Vision Transformer (ViT)} architecture. Transformers excel at capturing long-range global context \cite{dosovitskiy2020image}, which is essential for disambiguating local SAR descriptors. Furthermore, by integrating optical (spectral properties) and meteorological data (temperature/wind), we aim to resolve physical ambiguities.
+
+This paper makes two key contributions:
+\begin{enumerate}
+    \item A proposed \textbf{Multimodal, Explainable Architecture} for sea ice classification.
+    \item A \textbf{Data-Centric Validation} of the SAR baseline, correcting common pitfalls in dataset engineering to establish a reliable foundation for future fusion experiments.
+\end{enumerate}
+
+\section{Related Work}
+Deep learning has revolutionized remote sensing analysis. While CNNs have been the standard, Vision Transformers (ViTs) are gaining traction for their ability to model global context. Aleissaee et al. \cite{aleissaee2023} highlighted the superior performance of Transformers in hyperspectral and SAR domains. Similarly, Zhang et al. \cite{zhang2024cnn} proposed a hybrid CNN-Transformer network (SI-CTFNet) to combine local feature extraction with global semantic modeling. Very recently, Xia et al. \cite{xia2025vision} successfully applied ViTs to classify broad sea surface phenomena in SAR imagery, demonstrating their superiority over CNNs for structural features. Hierarchical approaches, such as the CNN pipeline proposed by Chen et al. \cite{chen2023sea}, have also shown that decomposing the task (e.g., Ice/Water separation followed by type classification) improves performance.
+
+Multimodal fusion is emerging as a critical frontier. Sun et al. \cite{sun2019monitoring} and Li et al. \cite{li2021fusion} explored early combinations of optical and SAR data for broad ice monitoring, often using pixel-level or mathematical fusion. More recently, Wiehle et al. \cite{wiehle2024sea} demonstrated the benefits of fusing Sentinel-1 (SAR) and Sentinel-3 (Optical/Thermal) data using CNNs. In 2025, de Lo\"e et al. \cite{deloe2025fusing} further validated this direction by showing that fusing VIIRS Ice Surface Temperature (IST) with SAR significantly aids in resolving ambiguous signatures. \subsection{Emerging Trends: Multimodal Fusion and Weakly Supervised Learning}
+Recent reviews in 2024 and 2025 highlight a paradigm shift towards multimodal data fusion to resolve the inherent ambiguities in SAR imagery \cite{andersson2025deep,li2024advancing}. For instance, the "Automated Sea Ice Products" (ASIP) initiative demonstrates that combining SAR with passive microwave radiometer data (e.g., AMSR2) can significantly improve sea ice concentration retrieval \cite{asip2024}. Moreover, comparative studies on data input selection have confirmed the critical role of ablation testing \cite{chen2024comparative}. Additionally, recent work has successfully demonstrated the efficacy of Vision Transformers (ViTs) for fusing co-located optical and SAR imagery \cite{chen2024colocated}. Our work extends this fused approach by leveraging Transformer architectures to better capture long-range dependencies and physical context.
+
+Recently, Khan et al. \cite{khan2024transformer} demonstrated the efficacy of ViTs for Land Use and Land Cover (LULC) classification, highlighting the necessity of interpretability. Similarly, Xia et al. \cite{xia2025vision} utilized Attention Rollout to visualize ViT decision-making in SAR. We build on these foundations but adopt **Integrated Gradients** (via Captum) for its axiomatic attribution properties \cite{khan2024transformer}, applying it to a multimodal input space.
+
+\section{Methodology}
+
+\subsection{Proposed Multimodal Framework}
+Our proposed architecture (Fig. \ref{fig:arch}) leverages the strength of Transformers to fuse heterogeneous data sources. The model consists of three parallel encoders:
+\begin{enumerate}
+    \item \textbf{SAR Encoder:} Processes Sentinel-1 HH/HV bands to capture surface roughness and texture.
+    \item \textbf{Optical Encoder:} Processes Sentinel-2/3 imagery (when available) to capture spectral albedo.
+    \item \textbf{Met Encoder:} Processes numerical weather prediction data (ERA5) to provide thermodynamic context.
+\end{enumerate}
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=\columnwidth]{images/multimodal_architecture_v3.png}}
+\caption{The proposed Multimodal Temporal-Spatial Vision Transformer (TSViT) architecture. A Cross-Modal Attention Fusion module integrates features from SAR, Optical, and Meteorological streams, while an Explainability module outputs Attribution Maps.}
+\label{fig:arch}
+\end{figure}
+
+The core novelty lies in the \textbf{Cross-Modal Attention Fusion} module. Unlike simple concatenation, this module uses cross-attention layers to dynamically weigh the importance of each modality.
+
+\subsection{Explainability via Integrated Gradients}
+Deep learning models in safety-critical domains must be interpretable. Following the rigorous methodology of Khan et al. \cite{khan2024transformer}, we integrate the **Integrated Gradients** method (via the Captum library) into our framework. This gradient-based attribution technique assigns a relevance score to each input pixel, providing high-fidelity heatmaps that allow ice analysts to verify model decisions.
+
+\subsection{Data-Centric Pipeline}
+Before realizing the full multimodal vision, it is imperative to establish a robust baseline using the primary SAR modality. We utilized the \textbf{AI4Arctic / ASIP Sea Ice Dataset (v2)} \cite{saldo2021ai4arctic} and implemented a rigorous data-centric pipeline:
+
+\subsubsection{Full-Resolution Input}
+We utilize the original Sentinel-1 Extra Wide (EW) swath data with a pixel spacing of 40m ($10,723 \times 10,393$ pixels per scene), preserving fine-scale texture details often lost in downsampled 80m versions.
+
+\subsubsection{Correcting Data Leakage}
+Standard random splitting violates spatial autocorrelation. We implemented a **stratified, patch-based split** ensuring no spatial overlap between training and validation sets while maintaining identical class distributions.
+
+\subsubsection{High-Fidelity Labeling}
+We utilized **SIGRID-3 "Stage of Development" (SA) codes** instead of simple ice concentration, mapping them to physically distinct ice classes (e.g., New Ice, First-Year Ice, Old Ice).
+
+\subsubsection{Dynamic Normalization}
+We replaced generic ImageNet normalization with a dynamic calculation of mean and standard deviation derived directly from the training corpus.
+
+\section{Experiments and Results}
+To validate the architecture's encoder, we trained the SAR branch of our framework (ViT-Large) on the re-engineered dataset.
+
+\subsection{Experimental Setup}
+We compared the ViT-Large model against a ViT-Base baseline using different loss functions:
+\begin{itemize}
+    \item **Unweighted Cross-Entropy (CE)**
+    \item **Weighted Cross-Entropy (W-CE)**
+    \item **Focal Loss** ($\gamma=2.0$) \cite{lin2020focal} to address class imbalance issues prevalent in remote sensing \cite{li2020deep}.
+\end{itemize}
+
+\subsection{Results}
+Table \ref{tab:results} presents the performance metrics. The **ViT-Large + Focal Loss** configuration emerged as the champion.
+
+\begin{table}[htbp]
+\caption{Baseline SAR Model Performance}
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Model Config} & \textbf{Acc} & \textbf{Recall (MYI)*} & \textbf{Prec. (MYI)*} \\
+\hline
+ViT-Base (CE) & 64.2\% & 6.6\% & 42.1\% \\
+ViT-Base (W-CE) & 66.3\% & \textbf{84.8\%} & 37.2\% \\
+\textbf{ViT-Large (Focal)} & \textbf{69.6\%} & 40.6\% & \textbf{83.9\%} \\
+\hline
+\multicolumn{4}{l}{\footnotesize *MYI: Multi-Year Ice (Critical Minority Class)}
+\end{tabular}
+\label{tab:results}
+\end{center}
+\end{table}
+
+\subsection{Discussion}
+The results highlight a trade-off. Weighted CE achieves high recall but many false alarms ("Safety First"), while our champion **ViT-Large (Focal Loss)** model prioritizes precision (83.9\%).
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=0.85\columnwidth]{images/confusion_matrix_vit_large.png}}
+\caption{Confusion Matrix for the Champion ViT-Large Model.}
+\label{fig:cm}
+\end{figure}
+
+For the full multimodal system, this high-precision SAR encoder provides a reliable "anchor." Future work explicitly targets improving recall via multimodal fusion.
+
+\section{Conclusion}
+We have presented a blueprint for a next-generation sea ice classification system. By designing a Multimodal Transformer backbone and rigorously validating its SAR foundation, we have laid the groundwork for a system that is both accurate and explainable. Our data-centric analysis demonstrated that correcting sampling and labeling errors is as impactful as architectural choices. Future work will focus on training the Cross-Modal Attention module to fully exploit the synergy between SAR, optical, and environmental data.
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

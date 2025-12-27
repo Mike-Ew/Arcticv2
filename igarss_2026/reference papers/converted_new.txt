@@ -1,0 +1,703 @@
+2023 IEEE/CVF Winter Conference on Applications of Computer Vision Workshops (WACVW)
+
+2023 IEEE/CVF Winter Conference on Applications of Computer Vision Workshops (WACVW) | 979-8-3503-2056-5/23/$31.00 ©2023 IEEE | DOI: 10.1109/WACVW58289.2023.00028
+
+Sea ice classification with dual-polarized SAR imagery: a hierarchical pipeline
+Xinwei Chen
+
+K. Andrea Scott
+
+Mingzhe Jiang
+
+xinwei.chen@uwaterloo.ca
+
+ka3scott@uwaterloo.ca
+
+m63jiang@uwaterloo.ca
+
+Yuan Fang
+
+Linlin Xu
+
+David A. Clausi
+
+yuan.fang@uwaterloo.ca
+
+l44xu@uwaterloo.ca
+
+dclausi@uwaterloo.ca
+
+University of Waterloo
+Waterloo, ON, Canada
+
+Abstract
+Sea ice mapping on synthetic aperture radar (SAR) imagery is important for various purposes, including ship
+navigation and usage in environmental and climatological
+studies. Although a series of deep learning-based models
+have been proposed for automatic sea ice classification on
+SAR scenes, most of them are flat N-way classifiers that
+do not consider the uneven visual separability of different
+sea ice types. To further improve classification accuracy
+with limited training samples, a hierarchical deep learningbased pipeline is proposed for sea ice mapping from SAR.
+First, a semantic segmentation model with encoder-decoder
+structure is implemented to accurately separate ice and
+open water on each SAR scene. To classify different ice
+types, a two-level category hierarchical convolutional neural network (CNN)-based model is then trained using limited numbers of labeled image patches. Experimental results on dual-polarized SAR scenes collected from C-band
+satellite RADARSAT-2 show that ice-water mapping results
+are in very good accordance with pixel-based labels under different combinations of encoders and decoders. Also,
+compared to a flat N-way CNN, the hierarchical CNNs further boosts the classification accuracy among all the ice
+types.
+
+1. Introduction
+The monitoring and classification of arctic sea ice is crucial for ship navigation and climate change prediction in polar regions [39, 21]. Satellite borne synthetic aperture radar
+(SAR) is an advantageous remote sensor for sea ice classification because it can obtain high resolution imagery in different polarizations under all weather conditions. The variance of dielectric properties and surface features between
+different types of sea ice (as well as open water) leads to
+
+2690-621X/23/$31.00 ©2023 IEEE
+DOI 10.1109/WACVW58289.2023.00028
+
+different backscattering characteristics and textures on SAR
+imagery [29]. On the other hand, the interactions between
+the SAR signal and sea ice are also affected by many other
+factors (e.g., imaging frequency, incidence angle, temperature, and wind speed), which makes SAR sea-ice images
+hard to interpret [34]. Since operational sea ice charting
+from dual-polarized SAR imagery based on manual labeling is laborious and coarse on both spatial and temporal
+resolution, various automatic sea ice classification methods using computer vision techniques have been proposed
+in past two decades. Algorithms vary from traditional machine learning (ML)-based classifiers using backscatter and
+texture features [24, 19, 13, 28, 37, 26, 30, 23, 7] to deep
+learning (DL)-based models with automatic feature extraction [3, 29, 20, 38, 39] proposed in the past few years.
+Compared to traditional classifiers, DL-based models (such
+as convolutional neural networks) are end-to-end pipelines
+that do not utilize a complex feature engineering process.
+However, they still have certain limitations. For example,
+due to the coarse resolution of the reference ground truths
+(i.e., sea ice charts), it is practically impossible to produce
+pixel-based ice type labels with 100% accuracy. Hence, the
+high classification accuracy reported by some studies that
+used the coarse ice charts as ground truths might not be
+reliable. Also, deep convolutional neural network (CNN)
+models trained with limited number of labeled samples are
+prone to overfitting with poor generalization ability. The
+imbalanced sample numbers between different ice types
+also negatively affect the classification accuracy of certain
+ice types. Hence, a robust DL-based sea ice classification
+model trained with limited labeled samples needs to be further pursued.
+In SAR sea ice imagery, the visual separability of different categories is usually uneven. For example, it is generally
+much easier to visually separate between ice and open water
+regions than two specific ice types. Most of the CNN-based
+
+224
+
+Authorized licensed use limited to: University of Texas of the Permian Basin. Downloaded on December 13,2025 at 06:46:10 UTC from IEEE Xplore. Restrictions apply.
+
+sea ice mapping models are flat N-way classifiers, which
+may not perform well on ice types that are difficult to classify. Previous works have shown that organizing classifiers
+in a hierarchical manner can further boost the classification
+accuracy [35, 16, 36, 2]. Thus, in this paper, a hierarchical classification approach is proposed to classify sea ice in
+dual-polarized SAR imagery. Despite the challenges in sea
+ice type classification, ice-water mapping for SAR imagery
+is a more straightforward task as the differences in backscatter coefficient and textures are quite distinct between ice and
+water. Hence, a semantic segmentation model is first trained
+to segment each SAR scene into two classes, i.e., ice and
+open water. Then, small image patches sampled from ice
+regions are labeled with different ice types (e.g., multi-year
+ice, first-year ice, new ice, grey/grey white ice) and used to
+a hierarchical CNN-based model that decomposes the classification task into two steps. Comparison of testing results
+shows that the proposed scheme outperforms CNN-based
+models that conduct flat classification at one time.
+A brief introduction of the dataset used in this study is
+provided in Section 2. The details of each level in the proposed hierarchical pipeline are illustrated in Section 3. Experimental result analysis and comparison are given Section
+4, followed by the conclusions and future work in Section
+5.
+
+concentration levels. For example, the light blue and red
+represent open water and 90%+ sea ice concentration, respectively. More information about the dataset can be found
+in several previous works concerning sea ice classification
+and concentration estimation [17, 31, 12, 11, 10].
+
+Figure 1. Locations of the 21 RADARSAT-2 scenes used for model
+training in this study.
+
+2. Data Overview
+The SAR imagery used in this study for model training
+and testing consist of 35 scenes collected from the C-band
+SAR satellite RADARSAT-2 in the Beaufort Sea. They
+were all captured in the ScanSAR wide mode with HH
+and HV-polarizations being provided and an incidence angle ranging from 20◦ to 49◦ . The images were obtained
+from April to December in the years of 2010 (21 scenes)
+and 2011 (14 scenes). The locations of the 21 scenes in
+2010 are depicted in Fig. 1. The pixel spacing is 50 m
+and the size of each image is around 10000 × 10000 pixels.
+To improve computational efficiency, the original images
+are downsampled using 4 × 4 block averaging. The image analysis charts that cover the locations of SAR imagery
+are available for some of the scenes, which are provided by
+a Canada Ice Service (CIS)-trained analyst are used to obtain reference for the labeling of training samples. For each
+scene, a land mask is provided to exclude pixels of the land
+from the study. An example of a SAR scene in HH and
+HV channels with its land mask and image analysis chart is
+depicted in Fig. 2. For the image analysis chart, the values and abbreviations printed on each polygon indicate a
+certain sea ice concentration level with certain proportions
+of different ice types. For example, the ”9+, 8my 2fy” on
+the polygon on the top indicate 90%+ sea ice concentration with 80% of ice as multi-year ice and the 20% left as
+first-year ice. Different colors also indicate different sea ice
+
+Figure 2. An example of the RADARSAT-2 SAR scene (scene ID:
+20100623) in HH (a) and HV (b) channels. (c) The land mask
+of the scene. The pixels in black corresponds to land or image
+boundaries that are excluded from the study. (d) The image analysis chart of the scene.
+
+3. Methodology
+A flowchart of the proposed hierarchical scheme for sea
+ice classification is provided in Fig. 3 with each part illustrated below.
+
+225
+Authorized licensed use limited to: University of Texas of the Permian Basin. Downloaded on December 13,2025 at 06:46:10 UTC from IEEE Xplore. Restrictions apply.
+
+Figure 3. Flowchart of the proposed hierarchical approach for sea ice classification.
+
+3.1. Ice-water mapping using semantic segmentation models
+In recent years many CNN-based models have been proposed for ice-water mapping in dual-polarized SAR imagery [3, 25, 32, 12, 10]. Although relatively high accuracy
+have been reported, visual observation of the mapping results on the whole scene shows that they are still coarse and
+less precise in some regions, especially around ice-water
+boundaries during the melting and freeze-up seasons. That
+is because small-size image patches are used as the inputs
+of the CNN classification models and those models cannot
+learn features from a larger receptive field. Since the classification between ice and water regions can be also treated as
+a semantic segmentation task, the DL-based semantic segmentation model with encoder-decoder structure is a favorable choice for ice-water classification. By referring to image analysis charts and visual observation, pixel-based icewater map is labeled for each scene manually and used as
+ground truth for model training and evaluation.
+Table 1. Parameters of the semantic segmentation models trained
+for ice-water mapping.
+
+Image scale
+Ratio range
+Crop size
+Stride
+Category max ratio
+Optimizer
+Learning rate
+Momentum
+Weight decay
+Max iteration
+Evaluation
+
+(1350,1300)
+[0.5,2]
+(512,512)
+170
+0.75
+SGD
+0.01
+0.9
+0.0005
+20000
+mIoU
+
+In this paper, a number of state-of-the-art (SOTA) semantic segmentation models with different combinations of
+encoders (backbones) and decoders are evaluated and compared with each other using the MMSegmentation library
+[5]. It is an open source semantic segmentation toolbox
+based on PyTorch with various DL models/backbones in-
+
+Figure 4. Flowchart of the proposed semantic segmentation
+pipeline for ice-water mapping in each SAR scene. Red and black
+arrow lines between the blocks indicate the process of model training and prediction, respectively. The grey, black and white colors
+in the label map indicate ice, water, and land respectively. The yellow and blue colors in the prediction map indicate ice and water,
+respectively.
+
+corporated (e.g., UNet [27], ResNet [8], Vision transformer
+[6], and Swin transformer [18]). As the input image of
+the models in MMSegmentation should be an RGB image,
+the input of our model is a Pseudo RGB SAR scene with
+the three channels consisting of the pixel intensities in HH,
+HV channels and their average values (i.e., HH/2+HV/2),
+as shown in Fig. 4. A list of the parameters of the semantic segmentation models trained in this work is given
+in Table 1. To make the model scale-invariant, a data aug-
+
+226
+Authorized licensed use limited to: University of Texas of the Permian Basin. Downloaded on December 13,2025 at 06:46:10 UTC from IEEE Xplore. Restrictions apply.
+
+mentation pipeline that resizes and randomly crops from
+the current image is adopted. Specifically, a ratio is first
+randomly sampled from the ratio range (i.e., [0.5, 2]) and
+multiply it with the image scale, which corresponds to the
+size of the resized image. A 512 × 512 window is then applied to randomly crop the resized image, which produces
+the input patch for training the model. To avoid class imbalance issue, as well as to ensure that the model performs
+well on ice-water boundaries, the maximum ratio that single
+category (i.e., ice or water) could occupy in each training
+patch is set as 0.75. The algorithm used for the optimizer
+is stochastic gradient descent (SGD) and mean Intersection
+over Union (mIoU) is used as the evaluation metric. For
+model testing, a 512 × 512 sliding window is applied to
+the input SAR scene with a stride of 170 to produce pixelbased mapping results. Experimental results using a couple
+of models and backbones are presented in Section 4.
+
+3.2. Ice type classification with a hierarchy of CNNs
+Although in the open water regions identified in the icewater classification, some new ice with crust up to 10 centimetres in thickness may still exist, they are in small portions and do not pose danger on ship navigation. Therefore,
+in the step of ice type classification, regions/pixels that are
+identified as water can be masked out from the training and
+evaluation of the sea ice type classification model. Based on
+image analysis charts and visual observation, we label certain numbers of data points in each scene manually for training and validating the classification model. Specifically, instead of simply labeling on certain regions, scribble-based
+annotations are drawn in different ice regions, as shown in
+Fig. 5. Among ice types with different stages of development, the multi-year ice (MYI) tends to have the high0
+) at
+est HH-polarization backscatter coefficient (i.e., σHH
+C-band with relatively distinct patterns [22]. Thus, it is
+reasonable for the hierarchical classifier to first classify between MYI and other ice types. Labeled patches that do
+not belong to the MYI are then further classified into three
+classes based on their thickness: new ice (NI), grey ice/grey
+white ice (GI/GWI), and first-year ice (FYI) by training another CNN. The order of thickness range for different ice
+types is: M Y I > F Y I > GW I > GI > N I. The number of labeled patches for each ice type is listed on Table
+2. Details about the physical characteristics of each type
+of ice can be found in [1]. Since GI and GWI are usually
+mixed with each other and the resolution of the image analysis charts is coarse, the uncertainty of labeling them would
+be high. Thus, they are classified as one category instead
+of being labeled separately in this work. To facilitate visual evaluation, examples of regions dominated with different ice types in HH channel of the C-band RADARSAT-2
+SAR imagery are depicted in Fig. 6. Noted that SAR scenes
+obtained from the melting season (i.e, from June to Septem-
+
+ber) are excluded from the ice type classification study. That
+is because the wet or melted snow strongly reduces the SAR
+penetration depth and thus suppresses the volume scattering contribution of sea ice [40]. In consequence, the contrast between backscatter intensities of different ice types
+observed by SAR is decreased and thus prevents the classification model from identifying different ice types correctly.
+
+Figure 5. A figure illustration of the image patches of different ice
+types (here red and yellow lines correspond to multi-year ice and
+first-year ice, respectively) produced from scribble-based labels.
+
+Table 2. The number of labeled samples for each ice type.
+Sample number Sample number
+Ice type
+(training)
+(testing)
+Multi-year ice
+20493
+7223
+First-year ice
+80539
+63338
+New ice
+13250
+7289
+Young ice
+37987
+6847
+
+The AlexNet [15] is adopted as the structure for the each
+embedded CNN due to its good performance on limited
+number of samples. As shown in Table 3, the input patch
+size is determined empirically as 33. That is because a
+smaller patch size cannot obtain enough spatial information
+while the classification results produced by a larger patch
+size might be too coarse. The Adam optimizer proposed by
+Kingma and Ba [14] is used to optimize the model parameters. The patience of training is set as 6, which corresponds
+to the number of epochs with no improvement after which
+learning rate will be reduced by a factor of 0.1 (i.e., new
+learning rate = old learning rate × 0.1). To prevent overfitting, 20% of the randomly-selected weight values in the
+CNN are set as zero during the training process and 20% of
+the training samples are used for validation.
+
+4. Experimental results
+4.1. Ice-water mapping results
+The training set is obtained from the 21 SAR scenes in
+2010, while the 14 scenes in 2011 are all used for testing. In
+our experiment various models with different combinations
+of encoders/backbones and decoders are compared with
+
+227
+Authorized licensed use limited to: University of Texas of the Permian Basin. Downloaded on December 13,2025 at 06:46:10 UTC from IEEE Xplore. Restrictions apply.
+
+els that are “misclassified” as ice could actually be new ice.
+Given the limitations of numerical analysis, examples of
+mapping results are provided in Fig. 7 for visual evaluation.
+It can be observed that results produced by all the semantic
+segmentation models are in good accordance with manual
+labels. The main variations are around the ice-water boundaries, which is plausible as it is hard for both the expert and
+the model to distinguish melting/thin ice.
+
+4.2. Ice type classification results
+
+Figure 6. Examples of regions dominated with different ice types
+in HH channel of the C-band RADARSAT-2 SAR imagery. Top
+left: regions near ice-water boundaries with new ice that are outlined in red. Top right: regions filled with grey ice and grey white
+ice. Grey white ice generally has higher backscatter intensity than
+grey ice in HH channel. Bottom left: regions filled with first-year
+ice that generally has relatively low backscatter intensity in HH
+channel. Bottom right: regions dominated by multi-year ice with
+relatively high backscatter intensity in HH channel.
+Table 3. Parameters of the CNN-based model trained for ice type
+classification.
+
+Patch size
+Optimizer
+Initial learning rate
+Patience
+Factor
+Batch size
+Dropout rate
+Validation size
+
+33
+Adam
+0.001
+6
+0.1
+256
+0.2
+0.2
+
+each other. Due to the page limit and their similar testing
+accuracy, only a few of them are presented here, as shown
+in Table 4. Details about the structures of those backbones
+and decoders are illustrated in the papers listed in Table 4.
+Numerical results show that the various models have similar testing accuracy. Also, the combination of UNet-based
+backbone and atrous spatial pyramid pooling (ASPP)-based
+decoder head obtains the highest mIoU. Noted that the classification accuracy of ice is generally higher than that of
+open water. For operational use (e.g., ship navigation), this
+is acceptable because for the sake of safety, we would rather
+prefer water misclassified as ice rather than ice misclassified
+as water. Also, since manual labeling might not be always
+correct, especially around ice-water boundaries, water pix-
+
+In our pipeline, the ice-water mapping results produced
+by the UNet-based semantic segmentation model are first
+used to mask out open water regions from ice type classification. To present the testing results numerically, the
+confusion matrix of the ice type classification results using
+labeled samples is presented in Table 5. It can be observed
+that three types of ice have classification accuracy of more
+than 85%. The relatively high accuracy for MYI and FYI
+could be due to their consistent patterns and backscatter intensities, which facilitate the model to identify them correctly. In contrast, this is challenging for NI and GI/GWI
+mainly appeared in the melting/freeze-up seasons because
+they tend to have variant patterns and backscatter intensities
+(as shown in Fig. 6). This also accounts for the relatively
+low accuracy of NI. Besides, it can be observed that for a
+certain ice type, if it is misclassified, it is most likely to be
+classified into another ice type with an adjacent thickness
+range. In particular, 11% of YI is misclassified as GI/GWI.
+This is reasonable as the difference of thickness between NI
+and GI is relatively small and human labeling error is more
+likely to occur.
+To validate the effectiveness of hierarchical CNNs in accuracy improvement, the confusion matrix obtained from
+another AlexNet-based CNN model trained using 4 ice
+types directly without hierarchical structure is listed in Table 6 for comparison. It can be observed that the hierarchical CNNs further boost the testing accuracy among all the
+ice types, especially for MYI (the accuracy is improved by
+16.6%). This is consistent with the assumption that with
+limited training samples and uneven visual separability, hierarchical classifiers are likely to outperform flat N-way
+classifiers.
+As shown in Fig. 8, examples of ice type classification results on several SAR scenes are provided for visual
+evaluation. Scenes obtained in winter (e.g., two scenes on
+the top) mainly consist of MYI and FYI, which can be accurately separated by the hierarchical CNNs. Noted that
+there are a few FYI pixels between the gap of MYI that
+are misclassified as NI. During the freeze-up season (e.g.,
+the scene on middle left obtained on October), NI takes the
+majority around ice-water boundaries. GI and GWI become
+prevalent as the distance between ice and water goes further.
+Then, in November and December (e.g., two scenes at the
+
+228
+Authorized licensed use limited to: University of Texas of the Permian Basin. Downloaded on December 13,2025 at 06:46:10 UTC from IEEE Xplore. Restrictions apply.
+
+Table 4. Ice-water testing results using different combinations of encoders/backbones and decoders.
+
+Backbone
+ResNet V1c[9]
+ResNet V1c
+UNet [27]
+ResNet V1c
+SwinT[18]
+ViT[6]
+
+Decoder
+ASPP head[4]
+DS ASPP Head[4]
+ASPP head
+Uper head
+Uper head[33]
+Uper head
+
+IoU (ice)
+92.69
+92.85
+93.26
+92.73
+90.83
+91.2
+
+IoU (water)
+78.44
+78.99
+79.6
+78.89
+75.3
+75.58
+
+mIoU
+85.57
+85.92
+86.43
+85.81
+83.07
+83.39
+
+Acc (ice)
+97.55
+97.47
+98.35
+97.14
+94.57
+95.5
+
+Acc (water)
+84.23
+85.02
+83.57
+85.68
+87.62
+85.81
+
+Acc (average)
+91.23
+91.24
+90.96
+91.41
+91.09
+90.66
+
+Figure 7. Examples of ice-water mapping results. First column: SAR scenes in HH channel obtained in 2011 for testing. Second column:
+Pixel-based label. The grey, black and white colors in the label map indicate ice, water, and land mask respectively. Third to fifth columns:
+ice-water mapping results using different combinations of encoders and decoders (from left to right: UNet+ASPP head, ResNet V1c+ASPP
+head, Swin transformer+Uper head). The yellow and blue colors in the prediction map indicate ice and water, respectively.
+
+bottom) as the ice grows thicker, MYI, FYI, and GI/GWI
+can all be observed. Noted that those stripe-like regions
+with bright intensities may probably correspond to GWI, as
+shown in the scene on the bottom left. Overall, the ice type
+mapping results produced by the proposed model are generally in good accordance with visual perception and evaluation.
+Table 5. Confusion matrix of the ice type classification results using testing samples with the proposed hierarchical CNNs.
+Ground truth label
+NI
+YI
+FYI
+MYI
+NI
+79.5%
+5.0%
+3.4%
+2.0%
+Predicted
+YI
+11.0% 86.2%
+4.4%
+2.6%
+label
+FYI
+6.2%
+6.8%
+89.1%
+4.8%
+MYI
+3.3%
+2.0%
+3.1%
+90.6%
+
+Table 6. Confusion matrix of the ice type classification results using testing samples with a flat 4-way CNN.
+Ground truth label
+NI
+YI
+FYI
+MYI
+NI
+78.9% 12.2%
+3.6%
+6.5%
+Predicted
+YI
+12.2% 79.8%
+8.0%
+9.3%
+label
+FYI
+6.4%
+6.3%
+87.1% 10.2%
+MYI
+2.5%
+1.7%
+1.3%
+74.0%
+
+5. Conclusions
+This study adopts a hierarchical approach for sea ice
+classification using dual-polarized SAR imagery. A semantic segmentation model is first trained to conduct precise
+ice-water mapping on the SAR scenes. Then, a hierarchical
+CNN-based model is constructed by embedding two CNNs
+
+229
+Authorized licensed use limited to: University of Texas of the Permian Basin. Downloaded on December 13,2025 at 06:46:10 UTC from IEEE Xplore. Restrictions apply.
+
+Figure 8. Examples of ice type classification results on SAR scenes using the proposed hierarchical CNNs. Column 1: SAR scenes obtained
+in 2010. Column 2: classification results of the scenes in column 1. Column 3: SAR scenes obtained in 2011. Column 4: classification
+results of the scenes in column 3.
+
+into a two-level category hierarchy. In this way, ice regions
+are first classified into two coarse categories: multi-year ice
+and others. Non multi-year ice are then further decomposed
+into three fine categories: new ice, grey/grey white ice, and
+first-year ice. Experimental results on SAR scenes obtained
+from C-band satellite RADARSAT-2 show that compared to
+previously proposed flat N-way classification approaches,
+the hierarchical pipeline improves the classification performance significantly on both numerical analysis and visual
+evaluation. Future work will focus on further classifying
+the ice into more detailed categories if more data and labels
+are available. In addition, ice type classification model that
+can perform well in melting season needs to be investigated.
+
+References
+[1] Manual of standard procedures for observing and reporting
+ice conditions. Environment Canada: Ottawa, ON, Canada,
+2005.
+[2] Luca Bertinetto, Romain Mueller, Konstantinos Tertikas,
+Sina Samangooei, and Nicholas A Lord. Making better
+mistakes: Leveraging class hierarchies with deep networks.
+In Proc. IEEE/CVF Intl. Conf. Comput. Vis., pages 12506–
+12515, 2020.
+[3] Hugo Boulze, Anton Korosov, and Julien Brajard. Classification of sea ice types in Sentinel-1 SAR data using convolutional neural networks. Remote Sens., 12(13):2165, 2020.
+[4] Liang-Chieh Chen, George Papandreou, Iasonas Kokkinos,
+Kevin Murphy, and Alan L Yuille. Deeplab: Semantic image
+segmentation with deep convolutional nets, atrous convolu-
+
+230
+Authorized licensed use limited to: University of Texas of the Permian Basin. Downloaded on December 13,2025 at 06:46:10 UTC from IEEE Xplore. Restrictions apply.
+
+tion, and fully connected crfs. IEEE Trans. Pattern Anal.
+Mach. Intell., 40(4):834–848, 2017.
+[5] MMSegmentation Contributors.
+MMSegmentation:
+Openmmlab semantic segmentation toolbox and benchmark.
+https://github.com/open-mmlab/
+mmsegmentation, 2020.
+[6] Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov,
+Dirk Weissenborn, Xiaohua Zhai, Thomas Unterthiner,
+Mostafa Dehghani, Matthias Minderer, Georg Heigold, Sylvain Gelly, et al. An image is worth 16x16 words: Transformers for image recognition at scale. arXiv preprint
+arXiv:2010.11929, 2020.
+[7] Mohsen Ghanbari, David A Clausi, Linlin Xu, and Mingzhe
+Jiang. Contextual classification of sea-ice types using compact polarimetric SAR data. IEEE Trans. Geosci. Remote
+Sens., 57(10):7476–7491, 2019.
+[8] Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
+Deep residual learning for image recognition. In Proc. IEEE
+Comput. Soc. Conf. Comput. Vis. Pattern Recognit., pages
+770–778, 2016.
+[9] Tong He, Zhi Zhang, Hang Zhang, Zhongyue Zhang, Junyuan Xie, and Mu Li. Bag of tricks for image classification
+with convolutional neural networks. In Proc. IEEE/CVF Intl.
+Conf. Comput. Vis., pages 558–567, 2019.
+[10] Mingzhe Jiang, Xinwei Chen, Linlin Xu, and David A
+Clausi. Semi-supervised sea ice classification of SAR imagery based on graph convolutional network. In IGARSS
+2022-2022 IEEE Intl. Geosci. Remote Sens. Symp., pages
+1031–1034. IEEE, 2022.
+[11] Mingzhe Jiang, David A. Clausi, and Linlin Xu. Sea ice mapping of RADARSAT-2 imagery by integrating spatial contexture with textural features. IEEE J. Sel. Top. Appl. Earth
+Obs. Remote Sens., pages 1–14, 2022.
+[12] Mingzhe Jiang, Linlin Xu, and David A Clausi. Sea ice–
+water classification of RADARSAT-2 imagery based on
+residual neural networks (ResNet) with regional pooling. Remote Sens., 14(13):3025, 2022.
+[13] Juha A Karvonen. Baltic sea ice SAR segmentation and
+classification using modified pulse-coupled neural networks.
+IEEE Trans. Geosci. Remote Sens., 42(7):1566–1574, 2004.
+[14] Diederik P Kingma and Jimmy Ba. Adam: A method for
+stochastic optimization. arXiv preprint arXiv:1412.6980,
+2014.
+[15] Alex Krizhevsky, Ilya Sutskever, and Geoffrey E Hinton.
+Imagenet classification with deep convolutional neural networks. Adv. Neural Inf. Process. Syst., 25, 2012.
+[16] Duanshun Li, Anran Cong, and Shuai Guo. Sewer damage
+detection from imbalanced cctv inspection data using deep
+convolutional neural networks with hierarchical classification. Autom. Constr., 101:199–208, 2019.
+[17] Fan Li, David A Clausi, Lei Wang, and Linlin Xu. A semisupervised approach for ice-water classification using dualpolarization SAR satellite imagery. In Proc. IEEE Comput.
+Soc. Conf. Comput. Vis. Pattern Recognit. workshops, pages
+28–35, 2015.
+[18] Ze Liu, Yutong Lin, Yue Cao, Han Hu, Yixuan Wei, Zheng
+Zhang, Stephen Lin, and Baining Guo. Swin transformer:
+
+Hierarchical vision transformer using shifted windows. In
+Proc. IEEE/CVF Intl. Conf. Comput. Vis., pages 10012–
+10022, 2021.
+[19] Johannes Lohse, Anthony P Doulgeris, and Wolfgang Dierking. Mapping sea-ice types from Sentinel-1 considering
+the surface-type dependent effect of incidence angle. Ann.
+Glaciol., 61(83):260–270, 2020.
+[20] Hangyu Lyu, Weimin Huang, and Masoud Mahdianpari.
+Eastern arctic sea ice sensing: First results from the
+RADARSAT constellation mission data. Remote Sens.,
+14(5):1165, 2022.
+[21] Hangyu Lyu, Weimin Huang, and Masoud Mahdianpari. A
+meta-analysis of sea ice monitoring using spaceborne polarimetric SAR: Advances in the last decade. IEEE J. Sel. Top.
+Appl. Earth Obs. Remote Sens., 2022.
+[22] Mallik S Mahmud, Vishnu Nandan, Suman Singha,
+Stephen EL Howell, Torsten Geldsetzer, John Yackel, and
+Benoit Montpetit. C-and L-band SAR signatures of Arctic sea ice during freeze-up.
+Remote Sens. Environ.,
+279:113129, 2022.
+[23] Shuhratchon Ochilov and David A Clausi. Operational SAR
+sea-ice image classification. IEEE Trans. Geosci. Remote
+Sens., 50(11):4397–4408, 2012.
+[24] Jeong-Won Park, Anton Andreevich Korosov, Mohamed
+Babiker, Joong-Sun Won, Morten Wergeland Hansen, and
+Hyun-Cheol Kim.
+Classification of sea ice types in
+Sentinel-1 synthetic aperture radar images. The Cryosphere,
+14(8):2629–2645, 2020.
+[25] Yibin Ren, Xiaofeng Li, Xiaofeng Yang, and Huan Xu. Development of a dual-attention U-Net model for sea ice and
+open water classification on SAR images. IEEE Geosci. Remote Sens. Lett., 19:1–5, 2021.
+[26] Rudolf Ressel, Anja Frost, and Susanne Lehner. A neural
+network-based classification for sea ice types on x-band sar
+images. IEEE J. Sel. Top. Appl. Earth Obs. Remote Sens.,
+8(7):3672–3680, 2015.
+[27] Olaf Ronneberger, Philipp Fischer, and Thomas Brox. U-net:
+Convolutional networks for biomedical image segmentation.
+In Proc. Med. Image Comput. Comput. Assist Interv., pages
+234–241. Springer, 2015.
+[28] L-K Soh, Costas Tsatsoulis, Denise Gineris, and Cheryl
+Bertoia. Arktos: An intelligent system for SAR sea ice
+image classification. IEEE Trans. Geosci. Remote Sens.,
+42(1):229–248, 2004.
+[29] Wei Song, Minghui Li, Wen Gao, Dongmei Huang, Zhenling Ma, Antonio Liotta, and Cristian Perra. Automatic seaice classification of SAR images based on spatial and temporal features learning. IEEE Trans. Geosci. Remote Sens.,
+59(12):9887–9901, 2021.
+[30] Weikai Tan, Jonathan Li, Linlin Xu, and Michael A Chapman. Semiautomated segmentation of Sentinel-1 SAR imagery for mapping sea ice in Labrador coast. IEEE J. Sel.
+Top. Appl. Earth Obs. Remote Sens., 11(5):1419–1432, 2018.
+[31] Lei Wang, K Andrea Scott, Linlin Xu, and David A Clausi.
+Sea ice concentration estimation during melt from dual-pol
+SAR scenes using deep convolutional neural networks: A
+case study. IEEE Trans. Geosci. Remote Sens., 54(8):4524–
+4533, 2016.
+
+231
+Authorized licensed use limited to: University of Texas of the Permian Basin. Downloaded on December 13,2025 at 06:46:10 UTC from IEEE Xplore. Restrictions apply.
+
+[32] Yi-Ran Wang and Xiao-Ming Li. Arctic sea ice cover data
+from spaceborne synthetic aperture radar by deep learning.
+Earth Syst. Sci. Data, 13(6):2723–2742, 2021.
+[33] Tete Xiao, Yingcheng Liu, Bolei Zhou, Yuning Jiang, and
+Jian Sun. Unified perceptual parsing for scene understanding. In Proc. Comput. Vis. ECCV, pages 418–434, 2018.
+[34] Yan Xu and K Andrea Scott. Sea ice and open water classification of SAR imagery using CNN-based transfer learning.
+In 2017 IEEE Intl. Geosci. Remote Sens. Symp. (IGARSS),
+pages 3262–3265. IEEE, 2017.
+[35] Zhicheng Yan, Hao Zhang, Robinson Piramuthu, Vignesh Jagadeesh, Dennis DeCoste, Wei Di, and Yizhou Yu. Hd-cnn:
+hierarchical deep convolutional neural networks for large
+scale visual recognition. In Proc. IEEE Int. Conf. Comput.
+Vis., pages 2740–2748, 2015.
+[36] Kai Yi, Xiaoqian Shen, Yunhao Gou, and Mohamed Elhoseiny. Exploring hierarchical graph representation for
+large-scale zero-shot image classification. arXiv preprint
+arXiv:2203.01386, 2022.
+[37] Natalia Yu Zakhvatkina, Vitaly Yu Alexandrov, Ola M Johannessen, Stein Sandven, and Ivan Ye Frolov. Classification
+of sea ice types in ENVISAT synthetic aperture radar images.
+IEEE Trans. Geosci. Remote Sens., 51(5):2587–2600, 2012.
+[38] Jiande Zhang, Wenyi Zhang, Yuxin Hu, Qingwei Chu, and
+Lei Liu. An improved sea ice classification algorithm with
+Gaofen-3 dual-polarization SAR data based on deep convolutional neural networks. Remote Sens., 14(4):906, 2022.
+[39] Tianyu Zhang, Ying Yang, Mohammed Shokr, Chunlei Mi,
+Xiao-Ming Li, Xiao Cheng, and Fengming Hui. Deep learning based sea ice classification with Gaofen-3 fully polarimetric SAR data. Remote Sens., 13(8):1452, 2021.
+[40] Yu Zhang, Tingting Zhu, Gunnar Spreen, Christian
+Melsheimer, Marcus Huntemann, Nick Hughes, Shengkai
+Zhang, and Fei Li. Sea ice and water classification on dualpolarized Sentinel-1 imagery during melting season. The
+Cryosphere Discussions, pages 1–26, 2021.
+
+232
+Authorized licensed use limited to: University of Texas of the Permian Basin. Downloaded on December 13,2025 at 06:46:10 UTC from IEEE Xplore. Restrictions apply.
+
+

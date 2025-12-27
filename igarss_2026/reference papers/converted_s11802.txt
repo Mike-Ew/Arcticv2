@@ -1,0 +1,719 @@
+J. Ocean Univ. China (Oceanic and Coastal Sea Research)
+https://doi.org/10.1007/s11802-021-4824-y
+ISSN 1672-5182, 2021 20 (6): 1440-1450
+http://www.ouc.edu.cn/xbywb/
+E-mail:xbywb@ouc.edu.cn
+
+Fusion of SAR and Optical Image for Sea Ice Extraction
+LI Wanwu1), LIU Lin1), *, and ZHANG Jixian2)
+1) College of Geodesy and Geomatics, Shandong University of Science and Technology, Qingdao 266590, China
+2) National Quality Inspection and Testing Center for Surveying and Mapping Products, Beijing 100830, China
+(Received November 11, 2020; revised December 3, 2020; accepted December 24, 2020)
+© Ocean University of China, Science Press and Springer-Verlag GmbH Germany 2021
+Abstract It is difficult to balance local details and global distribution using a single source image in marine target detection of a
+large scene. To solve this problem, a technique based on the fusion of optical image and synthetic aperture radar (SAR) image for the
+extraction of sea ice is proposed in this paper. The Band 2 (B2) image of Sentinel-2 (S2) in the research area is selected as optical
+image data. Preprocessing on the optical image, such as resampling, projection transformation and format conversion, are conducted
+to the S2 dataset before fusion. Imaging characteristics of the sea ice have been analyzed, and a new deep learning (DL) model,
+OceanTDL5, is built to detect sea ices. The fusion of the Sentinel-1 (S1) and S2 images is realized by solving the optimal pixel values
+based on deriving Poisson Equation. The experimental results indicate that the use of a fused image improves the accuracy of sea ice
+detection compared with the use of a single data source. The fused image has richer spatial details and a clearer texture compared
+with the original optical image, and its material sense and color are more abundant.
+Key words sea ice detection; image fusion; SAR image; optical image; Poisson Equation
+
+1 Introduction
+The occurrence of sea ice may cause port freezing and
+tunnel blocking, even affect marine fisheries. Therefore,
+the detection and extraction of sea ice are extremely important. The existing researches on marine target detection are mainly focused on ships, e.g., ship target detection
+based on synthetic aperture radar (SAR) images (Hwang
+et al., 2017; Iervolino and Guida, 2017; Hwang and Jung,
+2018; Cui et al., 2019) and optical images (Chen and Gong,
+2010; Zhu et al., 2010; Wang et al., 2011; Mattyus, 2013;
+Ren, 2016; Ji et al., 2017; Nie et al., 2017; Heiselberg,
+2019).
+Spaceborne SAR (synthetic aperture radar) has been proven to be an effective tool for monitoring sea ice (Ressel
+et al., 2016; Miguel et al., 2017), and over the years, sea
+ice detection technique based on SAR images has been
+significantly improved. Herzfeld et al. (2016) applied geostatistical methods to automatically classify sea ice by using SAR data. Ressel and Singha (2016) compared the polarimetric backscatter characteristics of sea ice in spaceborne X and C band SAR images and proposed a supervised classification algorithm for sea ice. Fang et al. (2007)
+proposed a multiclass classification method for a large
+area glacier by using spaceborne single-polarimetric SAR
+intensity image. They also constructed a linear classifier
+* Corresponding author. Tel: 0086-532-80681183
+E-mail: liulin2009@126.com
+
+with the supervised neighborhood embedding via sparse
+characteristic representation (Fang et al., 2017). Lohse et al.
+(2019) proposed a numerically optimized decision-tree
+algorithm, which was applied in the classification of sea
+ice using SAR data. Xie et al. (2020) proposed a method
+for differentiating seawater from sea ice by using quadpolarized C band SAR image. Johansson et al. (2020) investigated a method for identifying oil slick and sea ice
+by using SAR image. Park et al. (2016) proposed a classification algorithm for sea ice in Sentinel-1 (S1) image
+based on a machine learning model.
+To compensate for the deficiency of SAR image, which
+is difficult to be interpreted, some scholars use multispectral images to classify and detect sea ice (Han et al., 2016;
+Heiselberg and Heiselberg, 2017; Su et al., 2019; MacGregor et al., 2020). Typically, Barbieux et al. (2018) proposed an algorithm to distinguish the ice from open water
+on ice lakes by using multispectral data obtained from
+Landsat 8. This algorithm has a significantly high optimal
+threshold stability, which can better separate the ice/water
+mixture from the ground. Han et al. (2018) proposed a
+classification framework for the detection of sea ice, which
+combines active learning (AL) and semi-supervised learning (SSL), by using transductive support vector machine
+to classify high spectral and multispectral images.
+The fusion of SAR and optical images in the existing
+researches is mainly applied in land classification (Liu
+et al., 2017; Sukawattanavijit et al., 2017; Aswatha et al.,
+2020). To exploit the advantages of SAR and multispectral data, some scholars adopt the fusion of SAR and mul-
+
+LI et al. / J. Ocean Univ. China (Oceanic and Coastal Sea Research) 2021 20: 1440-1450
+
+tispectral images to marine target detection (Park et al.,
+2018). Vijay and Gopalan (2012) used the images captured by TerraSAR-X and Indian Remote Sensing Satellite to analyze the glacial characteristics in the Himalayas
+by using the IHS (intensity, hue, saturation) fusion technology and Principal Component Analysis (PCA) based
+technology. Shah et al. (2019) employed the pixel-based
+technology to fuse the images captured by Radar Imaging
+Satellite-1 and RESOURCESAT-2. Compared with the original multispectral and SAR images, the fusion image provides an improved recognition of characteristics, such as
+blue ice and lake ice. Yu et al. (2019) proposed a new sea
+ice classification framework based on locality, which
+classifies the pixels of the fused image by using a sliding
+integration strategy and retains the local characteristic of
+the source image in both the spatial and characteristic domains. Heiselberg (2020) optimized a convolutional neural network with a series of hyperparameters and used S1
+(Sentinel-1) SAR and S2 (Sentinel-2) multispectral images in the experiments to achieve an improved ship and
+iceberg classification accuracy.
+In general, the fusion of SAR and multispectral images
+is mainly applied in land classification and less in marine
+target detection. In the field of marine target detection,
+numerous researches focus more on ships detection and
+less on sea ice detection. Moreover, for sea ice detection,
+most works mainly adopt SAR or optical image as single
+data source. Also, the fusion of SAR and optical images is
+
+rarely used for the detection and extraction of sea ice.
+Thus, in this paper, such a fusion image is employed, and
+the spectral color and interpretation characteristics of multispectral images are exploited to compensate for the deficiencies of SAR image and improve the accuracy of sea
+ice detection.
+
+2 Data
+2.1 Image Data Selection
+S2 Multispectral Instrument (MSI) data were obtained
+at three resolutions: 10-m resolution, which includes four
+bands; 20-m resolution, which includes six bands, four
+(705, 740, 783, and 865 nm) of which are used for vegetation characteristics and two larger SWIR (Short Wave
+Infra-Red) bands (1610 and 2190 nm) for snow/ice/cloud
+detection or vegetation moisture assessment; and 60-m
+resolution, which includes three bands that are mainly
+used for cloud shielding and atmospheric correction. The
+S2 image with 10-m resolution was selected, and the example of each band is shown in Table 1. In Band 4 (B4),
+the clouds and fog are clearly visible. In Band 3 (B3),
+they are faintly visible. In Band 8 (B8) and B2 (Band 2),
+the clouds and fog cannot be seen. But in B2 the image
+shows a better saturation and stronger penetration, thus
+better comprehensive effect. Therefore, the B2 band data
+of S2 with 10-m resolution was utilized to fuse with the
+previously processed S1 SAR dataset for sea ice detection.
+
+Table 1 Example images in four band of S2 with 10-m resolution
+Band and resolution
+
+B2 10 m
+
+B3 10 m
+
+B4 10 m
+
+B8 10 m
+
+Image of drilling platform
+
+1441
+
+Image of sea ice
+
+1442
+
+LI et al. / J. Ocean Univ. China (Oceanic and Coastal Sea Research) 2021 20: 1440-1450
+
+is shown in Fig.4.
+
+2.2 Image Preprocessing
+The SAR datasets for sea ice detection were collected
+by S1 on February 9, 2016, with a file name of S1A_IW_
+SLC_1SDV_20160209T215542_20160209T215609_009
+875_00E783_83E7.SAFE. For the fusion of optical image
+and SAR image, multispectral image data collected by S2
+on February 7, 2016, are used, with the file names of
+S2A_OPER_PRD_MSIL1C_PDMC_20160207T114115_
+R132_V20160207T025602_20160207T025602.SAFE and
+S2A_OPER_PRD_MSIL1C_PDMC_20160207T113337_
+R132_V20160207T025602_20160207T025602.SAFE. The
+S2 image is preprocessed according to the procedure shown
+in Fig.1.
+Fig.2 Resampling results.
+
+Fig.1 S2 image preprocessing procedure.
+
+The research area is in the Bohai Sea. The level-1C
+multi-resolutions products in the north of the 51˚N in the
+S2 image were resampled and converted into 10-m single-resolution data, thus obtaining a 30978×30978 pixel
+image. The nearest-neighbor method is used to interpolate
+the pixel values of the image, and the nearest is selected.
+To improve the imaging speed, the pyramid level was
+selected for resampling, and the resulting image is shown
+in Fig.2. To improve the accuracy of sea ice detection, the
+opaque clouds and cirrocumulus in level-1C products were
+extracted in the S2 image of the research area, which are
+colored in red in Fig.2. To improve the efficiency of sea
+ice detection, the land in the research area needs to be
+removed by setting the pixels to be null values and only
+the marine area was extracted. The extracted S2 image of
+the marine research area is shown in Fig.3.
+To facilitate the fusion of S1 and S2 images for sea ice
+detection, the two images need to be projected to the
+same geographic reference system. The extracted S2 image of the marine research area was resampled by using
+the nearest-neighbor, bilinear, and bicubic interpolations.
+To ensure the timeliness of target detection, the nearest-neighbor interpolation is employed to reproject the S2
+image in this work. Only the S2 image in the overlapped
+area with the SAR image was reprojected, and the result
+
+Fig.3 The extracted image in marine research area.
+
+Fig.4 S2 image in the research area after reprojection.
+
+2.3 Image Characteristics Analysis of Sea Ice
+After preprocessing, the multispectral image data with
+14-m resolution, consistent with the SAR image data, were
+obtained via resampling in the study area. Statistical analysis of the image characteristics of the sea ice in the research area is performed on a small number of samples
+and results are shown in Fig.5. The total number of pixels
+included in the statistical analysis is 12821093, and the
+
+1443
+
+LI et al. / J. Ocean Univ. China (Oceanic and Coastal Sea Research) 2021 20: 1440-1450
+
+Fig.5 Statistical characteristics of sea ice.
+
+pixel characteristic value is shown in Table 2.
+
+total number of pixels included in the statistical analysis
+is 133016388, and the pixel characteristic value is shown
+in Table 3.
+
+Table 2 Pixel characteristic value of sea ice
+Index
+
+Value
+
+Minimum
+Maximum
+Mean
+Sigma
+Median
+Coef variation
+ENL
+P75 threshold
+P80 threshold
+P85 threshold
+P90 threshold
+Max error
+
+0.15850
+0.41879
+0.23188
+0.03184
+0.22617
+0.28819
+12.03990
+0.24804
+0.25481
+0.26314
+0.27459
+0.00026
+
+Table 3 Pixel characteristic value of marine research area
+Index
+
+The image characteristics of the overall marine research
+area are analyzed and the results are shown in Fig.6. The
+
+Minimum
+Maximum
+Mean
+Sigma
+Median
+Coef variation
+ENL
+P75 threshold
+P80 threshold
+P85 threshold
+P90 threshold
+Max error
+
+Value
+0.10859
+0.62470
+0.20090
+0.05202
+0.19034
+0.56681
+3.11255
+0.23298
+0.24226
+0.25414
+0.26859
+0.00051
+
+Fig.6 Statistical characteristics of image in the marine research area.
+
+To obtain the characteristic value of various targets in
+the research area, the characteristics of the preprocessed
+image are statistically analyzed, as shown in Table 4.
+Table 4 The spectral characteristic value of each target
+in the research area
+Characteristic index
+
+Overall marine area
+
+Minimum
+Maximum
+Average
+
+0.10859
+0.62470
+0.20090
+
+Sea water Sea ice
+0.14440
+0.16709
+0.15560
+
+0.15850
+0.41879
+0.23188
+
+The statistical histogram of the overall marine research
+area exhibited multiple peaks, and sea ice exhibited a
+single peak. The area with an average value of 0.22296 is
+
+determined to be sea ice. Moreover, when a small number
+of sea ice samples were analyzed, a peak with the small
+reflection value of near 0.17 appeared, as well as for the
+overall marine research area. It is preliminarily determined
+that the region with this characteristic value is covered by
+semi-dissolved sea ice or sea ice covered by thin sea water. It is also found that the research area, where the reflection value is over 0.3 (5% of the total image), is mostly
+covered by coastal sea ice and a small part sea ice in the
+marine, not drilling platforms and coastal embankments,
+which is different from that shown by the SAR image.
+The comparison of the various targets between the S1 and
+S2 images is shown in Fig.7.
+
+1444
+
+LI et al. / J. Ocean Univ. China (Oceanic and Coastal Sea Research) 2021 20: 1440-1450
+
+Fig.7 Target comparison of the S1 and S2 images. a), the background is multispectral image. The dyke is gray. b), the background is SAR image. The dyke is white.
+
+2.4 Detection Dataset Construction
+The integral data of [0, 255] after linear scaling conversion were resampled according to 14-m resolution to construct the dataset of S2 for marine target detection. The S2
+dataset constructed for marine target detection includes a
+total of 48984320 pixels, which provides training, testing
+and verification dataset for the neural network to learn the
+sea ice detection. Fig.8 shows the research area and statistical characteristics of sea water and sea ice. The areas
+numbers 1–12 in the figure are sea water, which consists
+of 20521200 pixels, including 26175 28×28 pixels. The
+areas numbered 13–28 in the figure are covered by sea ice
+with 28463120 pixels, including 36305 28×28 pixels. As
+can be seen from Fig.8, there are two peaks appear for sea
+ice. The single peak with a pixel value between 33 and 39
+is mainly caused by semi-melting sea ice or sea ice covered by sea water, as indicated in red in the enlarged image No. 17.
+
+dient information of the source image and fusion the background information of the source image and target image.
+
+3 Method
+
+3.1.2 Sea ice initial detection
+The sea ice is initially detected from the S1 and S2
+images individually by using the OceanTDL5 model and
+three methods including StErf (Standard Error function)
+method, Loglogistic distribution method, and Sgmloglog
+method that is proposed by the authors previously to extract targets. Then the results were stored as marine target
+database tags_idlab.db and image_idDate.db for S1 and
+S2. Before the image fusion, preliminary data processing
+is carried out as the following procedure (Fig.10).
+
+Fusion of remote sensing images is performed by processing redundant or complementary multisource remote
+sensing data in space, spectrum, and time according to certain rules or algorithms. The composite image data with
+new spatial, spectrum, and time characteristics generally
+have more accurate and richer information compared with
+any single data. In this paper, the method of solving the
+optimal pixel value based on constructing Poisson Equation is used to fuse images, which can well retain the gra-
+
+3.1 DL Based Initial Detection
+3.1.1 OceanTDL5 construction
+A deep learning model OceanTDL5 for sea ice detection was constructed. It is composed of 1 Layer, 1 Group
+and 1 fully connected Dense (Fig.9). The organization form
+of the Layer is W*X_pluse_b-relu-Dropout-reshape. The
+middle Group includes 3 layers, and its organization form
+is as (W*X_pluse_b-relu-Dropout-reshape)*3. The organization form of fully connected Dense Layer is W*X_
+pluse_b-relu. The characteristic information is gradually
+reduced through 529-121-25-9 from 784 that were input
+at the beginning. Finally, a full connection containing 9
+neurons is used to perform weighted summation and Relu
+activate to compress to 2 characteristics, which are input
+to Softmax of Loss Layer for classification.
+
+LI et al. / J. Ocean Univ. China (Oceanic and Coastal Sea Research) 2021 20: 1440-1450
+
+1445
+
+Fig.8 Sea ice detection dataset with 14-m resolution. a) and b) for sea water; c) and d) for sea ice; e) and f) for overall marine research area.
+
+1446
+
+LI et al. / J. Ocean Univ. China (Oceanic and Coastal Sea Research) 2021 20: 1440-1450
+
+3.2 Image Fusion Based Detection
+3.2.1 Fusion method
+By solving the optimal pixel values from the Poisson
+Equation, the image pixels in the fusion area can be reconstructed. The algorithm is shown in Fig.11.
+Poisson Equation is expressed as follows:
+f  div(u )  div(
+
+f f
+2 f 2 f
+i,
+j)  2  2 .
+x y
+x
+y
+
+(1)
+
+The iterative method is employed for the discrete computation of Eq. (1). By convoluting with Laplace convolution kernel, the divergence image of the image u to be
+fused can be solved, in which Laplacian convolution kernel takes the following form:
+
+Fig.9 OceanTDL5.
+
+Fig.10 Data process flow before image fusion.
+
+0 1 0
+k  1 4 1  .
+0 1 0 
+
+nal image u by Laplacian operator previously.
+(2)
+
+The discrete formula of Laplacian operator on the image u to be fused is as follows:
+div(u )  u  ui 1, j  ui , j 1  ui 1, j  ui , j 1  4ui , j
+ dui , j  b .
+
+(3)
+
+The discrete formula of Laplacian operator on the fused
+image f of the areas covered by the targets is as follows:
+f  f i 1, j  f i , j 1  f i 1, j  f i , j 1  4 f i , j  dui , j  u  b ,
+
+(4)
+where
+fi , j 
+
+1
+( fi 1, j  fi , j 1  fi 1, j  fi , j 1  b) .
+4
+
+(5)
+
+In the equation, dui, j is the processed value of the origi-
+
+3.2.2 Sea ice detection based on fused images
+The initial detection data in ocean target datavase tag_
+idlab.db and image_idDate.db are used as the data source
+to fuse the S1 and S2 images for sea ice detection.
+1) Calculate the mean difference meanD of the pixel
+values for the suspected targets in the S1 and S2 images.
+Read the detection results of the suspected targets in the
+S1 and S2 images and calculate the mean difference meanD
+of the pixel values.
+meanD  meanS 2  meanS1 
+
+ ValS2-STP  ValS1-STP .
+NS2-STP
+
+NS1-STP
+
+(6)
+In the equation, meanS1 and meanS2 denote the mean
+pixel value of the suspected targets in the S1 and S2 images, respectively; ValS1−STP and ValS2−STP are the pixel
+values of the suspected targets in the S1 and S2 images,
+respectively; and NS1−STP, NS2−STP are the pixel number of
+
+LI et al. / J. Ocean Univ. China (Oceanic and Coastal Sea Research) 2021 20: 1440-1450
+
+1447
+
+Fig.11 Algorithm steps of the image fusion.
+
+suspected targets in the S1 and S2 images, respectively.
+2) Calculate the pixel values of the suspected targets in
+the fused image fusionS.
+The initial pixel values of the fused image (fusionS) are
+calculated as follows:
+fusionSmn  ValS1-STP mn  meanD .
+
+(7)
+
+In the equation, ValS1−STP denotes the pixel value of the
+suspected targets in the S1 image, and m and n denote the
+row and column of the pixels of suspected targets.
+3) Calculate the pixel values of the non-distributed targets in the S1 image.
+Read the pixel values of non-distributed targets in the
+S1 image in turn and adjust the pixel values of the 3×3
+grid area centered on the target in the S1 image by using
+the below equation and save them to the array clusterVal.
+clusterVal  j  k   S1 j  k   meanD /  .
+
+sea ice of the multispectral image, presenting a visual
+sense of rich color and clear texture. With regard to spectral color, the original SAR image is dark, but the brightness of the fused image is between the SAR and multispectral images. In terms of spatial detail, the fused image
+is much richer than the original multispectral image and
+has a strong sense of depth. From the enlarged image
+(Fig.14), it can be found that the fused image is superior
+to the SAR image (Fig.12) and the multi-spectral image
+(Fig.13) in terms of capturing spatial details. From the
+image interpretation perspective, the fused image is easier
+to determine the type of marine distribution target than
+the original SAR image, and is easier to spot the differences between the same types of distribution target than
+the original multi-spectral image.
+
+(8)
+
+In the equation, j denotes the row number of the S1
+image; k is the column number; and ε is the fusion coefficient. According to experimental verification, ε = 2 is adopted.
+4) Fuse the pixel values of non-distributed targets into
+the fused image (fusionS) of the suspected targets.
+The mask image of the image clusterVal is established,
+the center coordinates of the image to be fused are calculated, and the non-distributed target (clusterVal) is merged
+into the suspected target (fusionS) image according to the
+principle of the same boundary pixel value.
+
+Fig.12 S1 image before fusion.
+
+4 Experimental Results
+The original S1 and S2 images before fusion are shown
+in Figs.12 and 13, and the fused image obtained according to the method above is shown in Fig.14.
+1) Qualitative analysis
+In Fig.14, the fused image maintains the spatial details
+of the SAR image before fusion and the texture sense of
+
+Fig.13 S2 image before fusion.
+
+1448
+
+LI et al. / J. Ocean Univ. China (Oceanic and Coastal Sea Research) 2021 20: 1440-1450
+
+A total of 1861 pieces of sea ice are detected, at a detection rate of 99.7%. The detection accuracy is improved by
+3%, the detection time is 3.65 s, and the detection ability
+of the image with a 14-m resolution is near 67.2 km2 s−1.
+The undetected sea ice is mainly concentrated in the confluence of sea water and sea ice, where the ice is covered
+by water or is semi-melted.
+
+Fig.14 Fused image of S1 and S2.
+
+2) Quantitative analysis
+To evaluate effectiveness of the fusion method, the detection rate index is used to quantitatively analyze the sea
+ice extracted from the fused image. The sea ice detected
+using DL models are shown in Fig.15, and the sea ice
+detected by the fused image of S1 and S2 are shown in
+Fig.16.
+The pink boxes in Fig.15 indicate the area covered by
+the sea ice detected by the trained OceanTDL5 model. A
+total of 1804 pieces of sea ice are detected, each containing 28×28 pixels. The detection rate is 96.8%. In Fig.16,
+the sea ice areas detected by the fusion data of the S1 and
+S2 images are presented. Table 5 shows the detailed information about the effect of sea ice detection by using
+the DL model and the fusion data of the S1 and S2 images.
+
+Fig.15 Sea ice detected using DL model (pink box).
+
+Table 5 The effect of Sea ice detected using DL model and fusion of the S1 and S2 images
+Total number
+of samples
+OceanTDL5
+2254
+Fusion-OceanTDL5
+2254
+Model
+
+Sea ice
+number
+1867
+1867
+
+Number of detected targets
+1804
+1861
+
+Number of
+Time con- Detection ability
+Detection rate Missing rate
+missed targets
+sumed (s)
+(km2 s−1)
+63
+96.8%
+3.2%
+3.17
+78.4
+6
+99.7%
+0.3%
+3.65
+67.2
+
+Fig.16 Sea ice detected by the fusion of the S1 and S2 images.
+
+5 Conclusions
+For the target detection in a large sea area, it is difficult
+to balance local details and global distribution just by using a single source image because of its intrinsic limitations in imaging. Therefore, in this paper, the SAR im-
+
+ages and optical images are fused to extract sea ice in
+order to take the advantages of the two types of image
+sources and complement each other.
+The fused image maintained the spatial details and
+clear texture of the SAR image before fusion and the high
+texture sense (for sea ice) and rich color of the multispectral image. The qualitative analysis reveals that in terms
+of spatial details, the fused image is richer than the original multispectral image, has a sense of hierarchy, and is
+superior to the original SAR image and multispectral image in terms of captured spatial details. With regard to the
+spectral color, the original SAR image is darker, and the
+brightness of the fused image is between the SAR and
+multispectral images. From the perspective of image interpretation, the use of the fused image can determine
+more easily the type of marine distribution target compared with the use of the original SAR image. Moreover,
+it can determine more easily the difference between the
+same types of distribution target compared with the original multispectral image.
+The detection rate of the sea ice based on the fusion
+data of the SAR and optical images is 99.7%. The detection accuracy is 3% higher than that of the non-fusion
+model, and the detection ability for the image with a 14-m
+resolution is near 67.2 km2 s−1. The undetected sea ice is
+mainly concentrated in the confluence of sea water and sea
+
+LI et al. / J. Ocean Univ. China (Oceanic and Coastal Sea Research) 2021 20: 1440-1450
+
+ice, where the ice is covered by water or is semi-melted.
+
+Acknowledgements
+The study was supported by the Natural Science Foundation of Shandong Province (No. ZR2019MD034). This
+study was supported by data from European Space Agency
+(ESA) and the Institute of Remote Sensing and Digital
+Earth, Chinese Academy of Sciences.
+
+References
+Aswatha, S. M., Mukherjee, J., Biswas, P. K., and Aikat, S.,
+2020. Unsupervised classification of land cover using multimodal data from multi-spectral and hybrid-polarimetric SAR
+imageries. International Journal of Remote Sensing, 41 (14):
+5277-5304.
+Barbieux, K., Charitsi, A., and Merminod, B., 2018. Icy lakes
+extraction and water-ice classification using Landsat 8 OLI
+multispectral data. International Journal of Remote Sensing,
+39 (11): 3646-3678.
+Chen, Y., and Gong, Y. C., 2010. A method for optical remote
+sensing image ship extraction in cloudy sea background. OptoElectronic Engineering, 37 (12): 103-109.
+Cui, Z. Y., Li, Q., Cao, Z., and Liu, N. Y., 2019. Dense attention
+pyramid networks for multi-scale ship detection in SAR images. IEEE Transactions on Geoscience and Remote Sensing,
+57 (11): 8983-8997.
+Fang, L., Wei, X., Yao, W., Xu, Y. S., and Stilla, U., 2017. Discriminative features based on two layers sparse learning for
+glacier area classification using SAR intensity imagery. IEEE
+Journal of Selected Topics in Applied Earth Observations and
+Remote Sensing, 10 (7): 3200-3212.
+Han, H., Im, J., and Kim, H., 2016. Variations in ice velocities
+of pine island glacier ice shelf evaluated using multispectral
+image matching of Landsat time series data. Remote Sensing
+of Environment, 186: 358-371.
+Han, Y. L., Li, P., Zhang, Y., Hong, Z. H., and Wang, Z., 2018.
+Combining active learning and transductive support vector
+machines for sea ice detection. Journal of Applied Remote
+Sensing, 12 (2): 026016.
+Heiselberg, H., 2019. Aircraft and ship velocity determination in
+sentinel-2 multispectral images. Sensors, 19 (13): 2873.
+Heiselberg, H., 2020. Ship-iceberg classification in SAR and multispectral satellite images with neural networks. Remote Sensing, 12 (15): 2353.
+Heiselberg, P., and Heiselberg, H., 2017. Ship-Iceberg discrimination in Sentinel-2 multispectral imagery by supervised classification. Remote Sensing, 9 (11): 1156.
+Herzfeld, U. C., Williams, S., Heinrichs, J., Maslanik, J., and
+Sucht, S., 2016. Geostatistical and statistical classification of
+sea-ice properties and provinces from SAR data. Remote Sensing, 8 (8): 616.
+Hwang, J. I., and Jung, H. S., 2018. Automatic ship detection
+using the artificial neural network and support vector machine
+from X-Band SAR satellite images. Remote Sensing, 10 (11):
+1799.
+Hwang, J. I., Chae, S. H., Kim, D., and Jung, H. S., 2017. Application of artificial neural networks to ship detection from
+X-Band Kompsat-5 imagery. Applied Sciences, 7 (9): 961.
+Iervolino, P., and Guida, R., 2017. A novel ship detector based on
+the generalized-likelihood ratio test for SAR imagery. IEEE
+Journal of Selected Topics in Applied Earth Observations and
+
+1449
+
+Remote Sensing, 10 (8): 3616-3630.
+Ji, C., Yang, X. D., and Chen, C. Q., 2017. Target region locating algorithm for ship visual image under sea-sky background.
+Fire Control & Command Control, 42 (7): 66-71.
+Johansson, M., Espeseth, M., Brekke, C., and Holtet, B., 2020.
+Can mineral oil slicks be distinguished from newly formed
+sea ice using synthetic aperture radar? IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing, 13: 4996-5010.
+Liu, G., Li, L., Gong, H., Jin, Q. W., Li, X. W., Song, R., et al.,
+2017. Multisource remote sensing imagery fusion scheme based
+on Bidimensional Empirical Mode Decomposition (BEMD)
+and its application to the extraction of bamboo forest. Remote
+Sensing, 9 (1): 19.
+Lohse, J., Doulgeris, A. P., and Dierking, W., 2019. An optimal
+decision-tree design strategy and its application to sea ice classification from SAR imagery. Remote Sensing, 11 (13): 1574.
+MacGregor, J. A., Fahnestock, M. A., Colgan, W. T., Larsen, N.
+K., and Welker, J. M., 2020. The age of surface-exposed ice
+along the northern margin of the Greenland ice sheet. Journal
+of Glaciology, 66 (258): 667-684.
+Mattyus, G., 2013. Near real-time automatic marine vessel detection on optical satellite images. International Archives of the
+Photogrammetry, Remote Sensing and Spatial Information Sciences, 40 (1): 233-237.
+Miguel, M., Flavio, P., Corrado, F., and Lorenzo, G., 2017. Synthetic aperture radar analysis of floating ice at Terra Nova
+Bay – An application to ice eddy parameter extraction. Journal of Applied Remote Sensing, 11 (2): 026041.
+Nie, T., He, B., Bi, G., Zhang, Y., and Wang, W. S., 2017. A
+method of ship detection under complex background. ISPRS
+International Journal of Geo-Information, 6 (6): 159.
+Park, J. W., Korosov, A. A., Babiker, M., Won, J. S., and Kim, H.
+C., 2020. Classification of sea ice types in Sentinel-1 synthetic aperture radar images. The Cryosphere, 14 (8): 26292645.
+Park, K. A., Park, J. J., Jang, J. C., Lee, J. H., Oh, S., and Lee,
+M., 2018. Multi-spectral ship detection using optical, hyperspectral, and microwave SAR remote sensing data in coastal
+regions. Sustainability, 10 (11): 1-23.
+Ren, X. Y., 2016. Research on in-shore ship detection fromoptical remote sensing image via auxiliary knowledge. Master
+thesis. National University of Defense Technology.
+Ressel, R., and Singha, S., 2016. Comparing near coincident
+space borne C and X band fully polarimetric SAR data for Arctic sea ice classification. Remote Sensing, 8 (3): 198.
+Ressel, R., Singha, S., Lehner, S., Rsel, A., and Spreen, G., 2016.
+Investigation into different polarimetric features for sea ice classification using X-band synthetic aperture radar. IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing, 9 (7): 3131-3143.
+Shah, E., Jayaprasad, P., and James, M. E., 2019. Image fusion
+of SAR and optical images for identifying Antarctic ice features.
+Journal of the Indian Society of Remote Sensing, 47 (12): 21132127.
+Su, H., Ji, B., and Wang, Y., 2019. Sea ice extent detection in the
+Bohai Sea using Sentinel-3 OLCI data. Remote Sensing, 11 (20):
+2436.
+Sukawattanavijit, C., Chen, J., and Zhang, H., 2017. GA-SVM
+algorithm for improving land-cover classification using SAR
+and optical remote sensing data. IEEE Geoscience and Remote Sensing Letters, 14 (3): 284-288.
+Vijay, K., and Gopalan, V., 2012. High resolution TerraSAR-X
+image speckle suppression and its fusion with multispectral
+
+1450
+
+LI et al. / J. Ocean Univ. China (Oceanic and Coastal Sea Research) 2021 20: 1440-1450
+
+IRS LISS-III data for Himalayan glacier feature extraction.
+Journal of the Indian Society of Remote Sensing, 40 (2): 325334.
+Wang, B. Y., Zhang, R., Yuan, Y., and Yin, D., 2011. A new multilevel threshold segmentation method for ship targets detection
+in optical remote sensing images. Journal of University of Science and Technology of China, 41 (4): 293-298 (in Chinese
+with English abstract).
+Xie, T., Perrie, W., Wei, C., and Zhao, L., 2020. Discrimination
+of open water from sea ice in the Labrador sea using quad-
+
+polarized synthetic aperture radar. Remote Sensing of Environment, 247: 111948.
+Yu, Z., Wang, T. W., Zhang, X., Zhang, Z., and Ren, P., 2019.
+Locality preserving fusion of multi-source images for sea-ice
+classification. Acta Oceanologica Sinica, 38 (7): 129-136.
+Zhu, C. R., Zhou, H., Wang, R. S., and Guo, J., 2010. A novel
+hierarchical method of ship detection from spaceborne optical
+image based on shape and texture features. IEEE Transactions
+on Geoscience and Remote Sensing, 48 (9): 3446-3456.
+(Edited by Chen Wenwen)
+
+

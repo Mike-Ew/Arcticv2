@@ -1,0 +1,1113 @@
+geosciences
+Review
+
+Satellite SAR Data-based Sea Ice Classification:
+An Overview
+Natalia Zakhvatkina 1,2, *, Vladimir Smirnov 1 and Irina Bychkova 1
+1
+2
+
+*
+
+Arctic and Antarctic Research Institute, Saint-Petersburg 199397, Russia; vgs@aari.ru (V.S.);
+bychkova@aari.ru (I.B.)
+Nansen International Environmental Remote Sensing Center, Saint-Petersburg 199034, Russia
+Correspondence: natalyp@aari.ru
+
+Received: 13 March 2019; Accepted: 28 March 2019; Published: 31 March 2019
+
+
+
+
+Abstract: A review of the main approaches developed for sea ice classification using satellite imagery
+is presented. Satellite data are the main and very often only information source for sea ice classification
+and charting in the remote arctic regions. The main techniques used for ice classification and ice
+charting in several national ice services are considered. Advantages and disadvantages of various
+SAR data-based methods for ice classification are analyzed. It is shown that an increase of SAR
+technical abilities contributes to the enhancement of sea ice classification reliability. The possible
+further development of satellite data-based methods for ice classification is discussed.
+Keywords: sea ice cover; satellite remote sensing; SAR data processing; sea ice classification
+
+1. Introduction
+Sea ice cover is an essential component of the Arctic environment and plays an important role in
+the weather and global climate systems. In addition, sea ice has a significant impact on ice navigation
+and offshore activities in the polar region. Thus, sea ice classification and ice charting are of interest for
+making management decisions to ensure safety and efficiency of economic activities without damage
+for sensitive Arctic environment. Currently, remote sensing data are the main and very often only
+source of information about sea ice conditions in the Arctic.
+One of the primary tasks of sea ice charting is to accurately identify the location of the boundary
+between ice and open water (the ice edge) [1]. Estimation of ice concentration requires the ability
+to delineate ice and open water (OW) boundaries with finer spatial resolution. One of the main
+factors determining the ice navigation difficulties in the Arctic is the ice thickness. Other ice state
+parameters such as cracks, polynyas, fractures, slightly ridged ice, zones of decreased concentration,
+ridged features, and floes are very important for ice ship’s routing. The procedure of recognition of all
+these navigation-significant sea ice parameters should be operational and close to the near-real-time
+regime. At present, sea ice charting by national ice services is based on expert analysis of different data
+received from all available information sources. This information can be derived from satellite data of
+various spectral ranges [2].
+In the last decades, many studies have been conducted to derive data on sea ice characteristics from
+high-resolution Synthetic Aperture Radar (SAR) images. SAR can provide measurements regardless
+of the weather conditions and natural illumination with a high spatial resolution. The national ice
+services of the United States of America, Canada, Russia, Norway, Denmark and Finland employ
+high-resolution SAR images as the main data source for monitoring sea ice cover for navigation ships,
+fishing and various marine operations [1,3–5]. The national ice centers produce ice charts according to
+international and national standards defined by the World Meteorological Organization (WMO) [6].
+More data are becoming available and more quickly accessible to the scientific community, generating
+Geosciences 2019, 9, 152; doi:10.3390/geosciences9040152
+
+www.mdpi.com/journal/geosciences
+
+Geosciences 2019, 9, 152
+
+2 of 15
+
+quickly expanding research results and new research questions. The ultimate objective of this paper is
+to consider existing techniques and to estimate the further development of the satellite data-based
+methods for the SAR sea ice classification.
+2. Synthetic Aperture Radar
+The development of SAR observing systems for sea ice monitoring started in 1978 with the
+launch of the satellite SEASAT (USA). The study of daily SAR images acquired regularly over sea
+ice in the Beaufort Sea shows the data potential for application to the operational mapping of sea
+ice type and concentration. The Kosmos-1870 (launched in 1987) and then Almaz-1 (launched in
+1991) satellites carrying onboard the SAR instruments earnestly confirmed the applicability of satellite
+images, considered as an important operational data source for oceanology, geology, cartography,
+geophysics, etc. applications [7].
+The era of intensive development of SAR missions resulted in the successful launch of multiple
+satellites. SARs of ERS-1,2 (European Remote Sensing satellites, European Space Agency (ESA) in 1991
+and 1995) were utilized to monitor the sea ice on the Northern Sea Route, ice mapping and forecasts,
+and to provide detailed information on sea ice to select the ship routes. However, wide operational
+use of ERS SAR data was limited by its rather narrow swath width and spatial coverage up to 82◦
+N. The commercial SAR satellite RADARSAT-1 (RS-1, Canadian Space Agency), launched in 1995,
+provided access to a variety of SAR modes with different incidence angle, resolution and swath width.
+The ability to regularly acquire the C-band SAR images with 100 m resolution with up to 500 km wide
+swath has fundamentally changed the way that several national ice monitoring agencies now operate,
+such as the United States National Ice Center (NIC) and the Canadian Ice Service (CIS) [8].
+The launch of ENVISAT (Environmental Satellite, ESA) in 2002 with the multiple polarization
+ability of Advanced SAR (ASAR) data represented a technological improvement of spaceborne SAR
+systems allowing investigation of polarimetric scattering signatures of various sea ice types and
+OW at different incidence angles. These studies of sea ice signatures showed the high potential of
+multipolarized data for application to the operational mapping of sea ice type and concentration [9,10].
+The new capacity for ice cover monitoring has been shown by research of polarimetric mode data,
+which are provided by the next generation of satellites. These SAR instruments can alternately
+transmit horizontally (H) and vertically (V) polarized waves and receive both polarizations in different
+combinations providing the dual-polarization or fully polarimetric SAR data. RADARSAT-2 (RS-2)
+launched in 2007 for the Canadian Space Agency has enhanced the measurement of parameters
+determined by CIS (e.g., ice-edge location, ice concentration, and stage of development) that are
+important for operational ice monitoring. The launches of X-band TerraSAR-X and TanDEM-X
+(Germany, in 2007 and 2010), L-band ALOS-2 (Japan Aerospace Exploration Agency, in 2014), C-band
+Sentinel-1A/B (European Commission and ESA, in 2014 and 2016) and others have provided a large
+amount of multi-mode SAR images for sea ice observations.
+3. Interactive Sea Ice Charting: GIS-based Techniques
+CIS designed an image display system that comprises a series of servers and workstations as well
+as GIS software. The integrated system can geocode, pre-process the image, combine a few images to
+form of mosaic and draw lines to define homogeneous ice zones in the image. Ice charts are drawn for
+the Canadian Arctic, using all available satellite information, as well as visual ice observations in situ.
+The U.S. NIC uses SAR data (as well as other information) to provide routine ice thickness estimation,
+a daily ice edge and marginal ice zone hemispheric analysis via GIS tools. Detailed hemispheric
+analysis of sea ice types and concentrations is performed weekly in Sea Ice Grid (SIGRID) format [11].
+Ice products provide information on sea ice stage of development according to WMO ice nomenclature.
+The NIC has an active collaboration with the CIS [12].
+Finnish Ice Service (FIS) employs satellite data for mapping ice conditions in the Baltic Sea, using
+GIS-based software to enable the processing of satellite SAR information. Interpretation of satellite
+
+Geosciences 2019, 9, 152
+
+3 of 15
+
+images is performed by experienced ice experts using GIS technology to polygonize the sea ice areas
+of the same attributes. This technique requires many ground truth measurements and continuous
+monitoring of ice conditions. Operative ice information includes daily ice analysis charts, ice thickness
+analysis, ice model forecasts, etc. Daily ice charts are based on the ice chart of the preceding day,
+SAR images, observations from icebreakers and coastal stations, and include concentration, typical,
+maximum and minimum thickness of level ice and a numeral on a five-point scale for ice ridging.
+This technology has been developed for the Baltic Sea and is currently being developed for the Kara
+and Barents Seas. In addition, it will be extended to the other arctic seas [13].
+The GIS-based system developed at the Danish Meteorological Institute (DMI) efficiently produces
+digital ice charts in vector format for the Greenland waters using SAR and other satellite data. The ice
+service at the Norwegian Meteorological Institute routinely processes a greater volume of satellite
+remote sensing data and mainly focuses on the operational analysis of ice conditions for producing ice
+charts containing sea ice concentration and delineated areas of fast ice. The Norwegian Ice Service
+provides ice charts for the European part of the Arctic every weekday. The charts are produced by
+a manual interpretation of Sentinel-1 (S1) and RS-2 SAR data [12].
+In 1975, a concept and beta version of the Automated Ice Information System for the Arctic (ALISA)
+was developed at the Arctic and Antarctic Research Institute (AARI, St. Petersburg, Russia) [14]. One of
+the Automated Working Places (AWPs) of this system, AWP “Ice Expert”, has been designed to produce
+the ice information products. GIS-based software AWP “Ice Expert” operates with various satellite
+information comprising ice information from ground-based and drifting hydrometeorological stations,
+vessels and icebreakers. This comprehensive information analysis with the previous analysis (ice chart)
+as the background state allows producing new information products (annotated satellite images and
+ice charts) by experienced sea ice experts. The polygons of areas with homogeneous ice attributes are
+labeled by the ice expert and the resulting image is automatically saved in the WMO SIGRID3 standard
+vector format [11]. The developed automated technique allows working directly in the ArcView GIS
+environment and compiles the ice chart immediately as a vector shapefile containing information
+about the boundaries of ice zones and the ice attributes (“ice eggs”) within each zone.
+Russian State Research Center for Space Hydrometeorology “Planeta” (Moscow) has conducted
+radar surveys of the Arctic and Antarctic ice cover since 1983 after the launch of the first oceanographic
+satellite Kosmos-1500. “Planeta” provides digital charts of ice coverage conditions for the Arctic
+seas based on satellites data. The “Planeta” technology implies a combination of automated and
+interactive techniques to process visible, infrared or microwave satellite data. The satellite images are
+pre-processed in automated mode. In the interactive mode, the ice parameters (age, concentration,
+ice forms, etc.) are interpreted on satellite images and displayed on the ice chart. In addition,
+the designed GIS-based software “Planeta Monitoring” employs supervised classifications based on
+Bayesian maximum likelihood for normal feature vectors distribution, and the K-means clustering
+algorithm [15].
+4. SAR Data-based Ice Classification
+SARs emit the microwave radiation toward the Earth’s surface and receive the reflected echo
+by the same antenna recording the amplitude and phase. Consequently, a SAR image represents the
+intensity of radar reflections from the surface, which is measured by the value of the backscattering
+coefficient (σ◦ ). The information derived from SAR image depends on the radar frequency, polarization,
+and incidence angles, as well as the backscattering intensity of the given ice type, is influenced by the
+physical and dielectric properties of ice [5,15,16]. Ice thickness cannot be directly derived from SAR
+images but can be only roughly estimated from the ice stage of development (ice types). The automatic
+interpretation of SAR images is very challenging since SAR image interpretation is complicated
+by the ambiguity of sea ice backscatter. In addition, the need to quickly and routinely process of
+many delivered SAR images may require the development of the automated techniques. Therefore,
+
+Geosciences 2019, 9, 152
+
+4 of 15
+
+the creation of robust automated SAR imagery processing systems has been and remains a very urgent
+task for researchers.
+The most common approach to detect sea ice types is the use of the SAR image characteristic—tone
+or brightness—determined by the sea ice backscatter. The ability to detect different ice stages of
+development is very dependent on the geographic region and season [8,17,18]. The University of
+Kansas began to study the use of expert systems in sea ice classification from SAR since 1990 resulting
+in various techniques to measure and identify sea ice features in SAR imagery. The combination
+of the dynamic local thresholding and an expert system with human geophysical knowledge were
+investigated for ice–water segmentation and ice type classification from ERS-1 SAR data. The technique
+uses multiple thresholdings (selected by the dynamic thresholding method) and correlation to
+extract intermediate result images, which are then morphologically cleaned and recombined through
+a structural growing technique, resulting in distinctions among three ice thickness classes: 0–30 cm,
+30–200 cm, and >200 cm. The obtained ice classes and their characteristics, which represent a fullness
+of features in terms of shape, are fed to the established expert system. The proper labeling for
+the ice thickness classes in the final result image are achieved using geophysical classification
+knowledge (ice growth and behavior (geometry), geographical, and historical) to supplement the
+original classification. The proposed dynamic thresholding technique offers good separation of ice
+classes. Inherent problems caused by the ambiguity of the SAR images ice intensity under varying
+environmental conditions, as well as windy OW, are remedied to a large extent by the expert systems
+analysis [19,20].
+In 1992, the Geophysical Processor System (GPS) was developed at the Alaska Satellite Facility
+(ASF) Synthetic Aperture Radar Data Center, established at the University of Alaska, which was
+designed to regularly automatic sea ice classification from SAR [21]. The automated classification
+system was developed for single polarized SAR images from ERS-1 and jointly employed an ISODATA
+cluster analysis and the Look-Up Tables (LUTs) contain the expected backscatter coefficients of various
+ice types for a specific geographical region and season [22,23]. The air temperature fields received from
+the National Meteorological Center are used to select the appropriate LUTs to be used for classifying
+sea ice types in the SAR imagery. The use in the classification algorithm of only the backscatter values
+limited the number of distinguished sea ice types to four, and in the summer period to 2–3. The method
+of LUTs utilization allows distinguishing four ice types in winter: multiyear ice (MYI), rough first-year
+ice (FYI), smooth FYI, and a class that combines new ice and smooth OW. The most reliable results of
+GPS ice types classification were obtained for the estimation of sea ice in the central Arctic. The general
+conclusion was that the performance of the algorithm reveals a considerable dependence on the ice
+cover characteristics in certain regions but does an excellent job of mapping sea ice in regions to which
+it is optimally adapted [22,23].
+In 1998, Multi-Year Ice Mapping System (MIMS) at the University of Colorado was developed to
+quickly identify of the high-latitude old ice using uncalibrated SAR images from RADARSAT. A local
+dynamic thresholding algorithm using the Fisher criterion automatically maps and contours multiyear
+(old) ice. MIMS was tested and evaluated at the Naval Research Laboratory at the Stennis Space Center
+(NRLSSC) in Mississippi [24,25]. In addition, in 1998, a beta version of the fully automated system was
+designed and delivered to NIC and NRLSSC. The Advanced Reasoning using Knowledge for Typing
+of Sea ice (ARKTOS) system, evolved over more than 10 years, is a SAR-based sea ice classification
+system incorporated the knowledge-based rules of regional ice features to interpret RADARSAT SAR
+images [26]. After pre-processing of the input SAR image, ARKTOS applies a watershed region
+growing segmentation technique to identify intensity homogeneous regions (segments) in the image.
+A set of 25 attributes, which describe the properties of each segment, such as average intensity,
+area, shape and other spatial characteristics, and the simple texture-based statistics, is computed.
+Each segment is then classified according to a set of rules derived from the knowledge and ice experts
+experience using Dempster-Shafer belief system by looking for satisfied conditions. The algorithm
+allows distinguishing four classes: OW, new ice, FYI and MYI. The main advantage of ARKTOS is it is
+
+Geosciences 2019, 9, 152
+
+5 of 15
+
+a feature-based approach, while most knowledge-based systems are pixel-based. Human experts do
+not analyze the images at the pixel level; instead, they look at regions and features and reason about
+them. The ARKTOS system can classify SAR sea ice data automatically in an operational regime by
+simulating logical conclusions used by ice experts in the process of interpretation [27,28].
+Similar to the GPS system for the processing of geophysical data products, the RADARSAT
+Geophysical Processor System (RGPS) was developed at the Jet Propulsion Laboratory and installed in
+the ASF since 1999. The RGPS generated many products built on each other. The elaborate operational
+system classifies Scanning Synthetic Aperture Radar (ScanSAR) mode images of the RS-1 SAR in
+winter into five classes combining the ice backscatter values with ice motion and an empirical relation
+between accumulated freezing-degree days and ice thickness. The system identifies MYI, FYI rough,
+FYI smooth, and a class that combines new ice and smooth OW [29,30].
+Finnish Meteorological Institute (FMI) has developed several generations of algorithms for
+the estimation of sea ice concentration, and now offers precise real-time information on ice cover
+and concentration for the Baltic Sea. The Baltic Sea ice and OW discrimination with 90% accuracy
+based on thresholding of segment-wise local autocorrelation using SAR images was presented
+by Karvonen et al. [31]. Then, Karvonen (2010) [32] showed that several classes of sea ice can be
+distinguished by selecting the boundaries in the RS-1,2 and ENVISAT SAR images using the Canny
+edge detection. These methods can well distinguish OW areas, as well as different ice types and
+areas with certain types of ice characteristics (for example, cracks or ridges). A comparison of the
+ice–water classification results of these two algorithms application was presented by tests with RS-2
+and ENVISAT SAR data that showed the classification accuracy over 89.4% compared with ice maps
+of the Baltic Sea manually produced by the FIS. For training data, the classification result of both
+methods has more than 92% accuracy [32,33]. A fully automated algorithm using dual-polarized
+ScanSAR wide mode RS-2 data for sea ice concentration retrieval [34] has been applied by FIS in
+an operational test mode since 2014. The new iteration of sea ice concentration algorithm based
+on Neural Networks (NN) utilizing S1 double-polarization data was developed for the Baltic Sea.
+Backscattering coefficients, several texture features, and spectral gradient and polarization ratios
+extracted from the Advanced Microwave Scanning Radiometer-2 (AMSR2) data are used as input.
+The sea ice concentration estimates are computed for each SAR segment after a SAR segmentation,
+i.e., the NN inputs are segment-wise median values [35]. The fully automated sea ice concentration
+algorithm produces a daily mosaic covering the Baltic Sea, and it is planned to apply it over the Barents
+and Kara Seas.
+MAp-Guided Sea Ice Classification (MAGIC) system developed at the University of Waterloo [36,37]
+has been extended for automated ice–water discrimination on RS-2 dual-polarization images based on
+a combination of an Iterative Region Growing using Semantics (IRGS) classification and a pixel-based
+Support Vector Machine (SVM) approach. IRGS, developed at the University of Waterloo in the
+System Design Engineering department, performs the segmentation of the polygons via a watershed
+algorithm [38]. SVM classifier uses backscatter and SAR texture features to assign ice–water labels
+after IRGS segmentation. The MAGIC system has been tested on the groundtruthed RS-2 dual
+polarization SAR scenes of the Beaufort Sea containing a variety of ice types and water across
+melt, summer, and freeze-up periods. The average classification accuracy was found to be up to
+96.47% [37,39,40]. MAGIC has been developed as a modular system of an operational tool to be
+inserted into CIS operations.
+The Norwegian Meteorological Institute developed an automated system for sea ice classification
+based on cross-polarization SAR data implemented at the Norwegian Ice Service [41]. Pre-processed
+S1 SAR images are used to automatically reveal OW and sea ice concentration [42]. The Norwegian Ice
+Service currently provides the automatically generated daily ice charts for the Arctic in experimental
+test regime. The operational daily ice maps continue to be provided by sea ice experts using RS-2,
+S1 SAR and other data.
+
+Geosciences 2019, 9, 152
+
+6 of 15
+
+5. Discussion
+5.1. Ice Classification and SAR Technical Abilities
+Due to the large extent of sea ice in polar and sub-Arctic regions as well as the difficulties with in
+situ observations in those regions, remote sensing is the only practical way to estimate the ice cover
+conditions at the space and time scales required. The qualitative improvement of the environmental
+monitoring on a regional and global basis using SAR can be reached with advances in satellite
+capabilities, as well as in processing algorithm development.
+The technical ability to obtain multi-polarization (full- and double-polarization) SAR images
+improves the classification and segmentation of sea ice compared to single polarization images. Calm
+water (at low wind speed) has a low reflected signal resulting in a dark tone in SAR image, almost
+the same as a level FYI. Detection of OW affected by strong wind on a background of sea ice is
+simplified using SAR images with two polarizations (HH and HV) due to the significant difference
+in the backscatter signal from water and ice. The quantitative measurements by Arkett et al. [43]
+substantiate that co-polarized channels provide valuable information to an ice analyst. The coand cross-polarized ratio is known to provide an excellent measure to distinguish OW and ice
+types [10,44–46]. Nakamura et al. [44] proposed a polarimetric decomposition technique to classify
+sea ice of the Okhotsk Sea based on multi-polarization (HH and VV) and dual-frequency (L- and
+X-band) SAR-data. The VV/HH backscattering ratio provides better sea ice classification capability.
+The algorithm for retrieving ice thickness based on the backscattering ratio was improved by the
+empirical Integral-Equation Method (IEM) surface scattering model [47]. The algorithm performs
+better than previous retrievals, showing good agreement with in situ measurements of thickness data
+using L-band Pi-SAR (the multipolarized airborne SAR with X- and L-bands) with the root mean square
+error (MSE) of 7 cm (compared to C-band ASAR data with MSE of 13.6 cm). Nakamura et al. [47] also
+concluded that L-band SAR was more useful for thickness retrieval than the C-band.
+More advanced dual-polarized SAR data show the possibility of a decision tree classifier for
+sea ice types and OW discrimination using estimated statistical thresholds for winter. Open water
+is unambiguously discriminated (except thin sea ice) from smooth FYI, rough FYI, and MYI
+using a co-polarized ratio threshold with >99% accuracy [48]. The advantages of using the RS-2
+double-polarized SAR image data for automatic unsupervised segmentation of sea ice are discussed
+in [49].
+The assessment of the full polarimetric SAR images (HH, HV, VH, and VV) is presented
+in [50]. The full polarimetric mode of SAR imagery contains complete information about ice cover
+properties and can improve the sea ice classification accuracy [10,51–53]. An approach to analyzing
+the fully polarimetric images was introduced by Freeman and Durden [54], who decomposed
+the received signal of fully polarimetric data into the contributions of independent scattering
+mechanisms (Freeman–Durden decomposition). Scheuchl et al. [55,56] applied the proposed technique
+in combination with the Wishart distribution to the multifrequency and multipolarized SIR-C
+(the shuttle Spaceborne Imaging Radar) data and the airborne SAR imagery. The decomposition
+method provides a consistent physical description of the scattering processes showing the potential for
+the identification of ice types using polarimetric SAR data. Applied to dual-frequency data, the method
+can utilize the different information content of both frequencies and allows thin ice, FYI and MYI to be
+distinguished. The potential of supervised K-means and maximum likelihood (ML) classifications of
+various SAR polarimetric data to three pre-identified sea ice types and wind-roughened OW is explored
+in [57]. The advantages of the full polarimetric data for sea ice mapping is limited by the narrow
+image swath in the purpose of operational sea ice classification and can be useful to monitor small
+local areas [45,58,59]. The upcoming SAR of Canadian satellites RADARSAT Constellation Mission
+(RCM) in addition to polarimetric modes will provide data of new polarization configuration —hybrid
+polarization, also known as compact polarization (CP). Several studies assessing the possibility for
+discrimination of ice types and OW using SAR data obtained in the CP mode have shown promising
+
+Geosciences 2019, 9, 152
+
+7 of 15
+
+results [60–62]. The proposed CP SAR data will have a swath width up to 500 km and could be a good
+choice for operational sea ice observation using SAR [63].
+Moreover, to improve the SAR data classification, more complex datasets can be applied.
+In addition to using the multichannel, fully polarimetric images data can be supplemented by
+fusion between data acquired by different SAR sensors or between SAR data and multispectral
+images [53,64–69]. Another focus, when images acquired by different sensors are combined, is the
+availability of imagery with different resolutions that of advantage for sea ice classification [70].
+Other potential ability to streamline the ice mapping services is to enhance the satellite data
+processing techniques. Various approaches have been developed to automate the process of sea
+ice type classification as well as the location of the ice edge and OW in SAR imagery during the
+past years. Since several winter sea ice stages of development (types or age) and OW can have
+the same tonal properties, which represent backscatter values [4,5,23], the backscatter at a single
+pixel is insufficient to distinguish between ice categories. A single-polarization ERS-1 SAR image
+intensity-based classification with LUTs (algorithm proposed by ASF) have been used to identify MYI,
+smooth and rough FYI, and new ice/open water in the Beaufort and Chukchi Seas [71]. Additional
+information is required incorporating the spatial context information (e.g., texture) present in SAR
+images to analyze objects constructed of similar neighboring pixels. The image analysis method
+that groups adjacent pixels into significant areas and tracks these areas as objects according to their
+shape, texture, and spectral information is called an object-oriented classification. This object-based
+classification allows extracting information about image texture within the group of pixels, which is
+not available in single pixel-based classifications, making the sea ice parameters delineation more
+accurate. An important advantage of the object-oriented approach is the independence on the speckle
+noise of SAR images.
+Since the texture is manifested due to variations of the measured intensity occurring in scales
+much larger than the pixel size, the visually considered SAR image structures (floes, ridges, cracks,
+rafting ice, leads, etc.) may reveal homogeneous or inhomogeneous areas and can be characterized by
+different textural parameters [5]. The texture feature extraction is a very substantial stage since it affects
+the quality of the subsequent classification. Many texture features exist across various scales, and it is
+very important to measure the texture reasonably and effectively. The most widely used techniques to
+extract the texture information are statistical methods, e.g. wavelet transform, Markov random field
+(MRF) and others. The most common statistical method is based on a gray level co-occurrence matrix
+(GLCM). The texture features extraction via GLCM was presented and explored [72–74], and qualitative
+evidence of its usefulness for sea ice classification has been found as was one of the key steps for
+image processing improvement [75]. Holmes et al. [75] examined the use of texture features for sea
+ice classification and recommended incorporating some additional texture features in future work.
+The grey level co-occurrence probability texture features applicability for sea ice classes discrimination
+are widely discussed in [76], where Barber and LeDrew [76] achieved the best discrimination between
+ice types by simultaneously utilizing three GLCM texture features. The GLCM approach demonstrates
+better results than those of other texture discrimination methods and is extensively applied in texture
+description [77]. The investigation of texture statistics calculation parameters was also provided in
+many researchers (e.g., [78,79]).
+5.2. SAR Data-based Methods for Ice Classification
+Many SAR data-based methods for sea ice classification have been proposed utilizing unsupervised
+or supervised techniques. Autocorrelation methods [31,33], combinations of wavelet-based [80–82],
+Gabor wavelet techniques [79], MRF [36,83,84], clustering approaches [22,85] have evolved to produce
+reliable results (see Table 1).
+
+Geosciences 2019, 9, 152
+
+8 of 15
+
+Table 1. SAR data-based methods for sea ice classification.
+
+Support Vector Machine
+
+Neural Networks
+
+Maximum likelihood
+
+Bayes classifier
+
+Wavelet transforms
+
+Sea Ice
+Algorithm
+
+Input/Image Features
++ Additional Method
+
+Results and Comments
+
+Reference
+
+ERS-1
+
+ice boundary, ice floes; estimated using a visual
+interpretation of 3 scenes 1
+
+Liu et al. (1997) [80]
+
+RS-1/Entropy (texture)
+
+ice boundary; estimated using visual interpretation 1
+
+Gill (2001) [86]
+
+RS-1/texture
+
+~87% for three ice classes (by Discrete Wavelet
+Transform); estimated using 1 scene; results are
+consistent with ice observer reports
+
+Yu et al., 2002 [81]
+
+ENVISAT (VV)/texture,
+CBERS-02B 2 + hue-intensity-saturation
+transformation = fusing + PCA 3
+
+63.5% (OW), 36.6% (new ice) and 82.99% (young ice);
+estimated using 3 scenes
+
+Liu M. et al., 2015
+[87]
+
+ERS/texture
+
+94.17% for seven classes; estimated using
+independent test dataset
+
+Soh and Tsatsoulis
+(1999) [88]
+
+RS-1/texture + MRF
+
+better detection of smooth and rough FYI, MYI;
+estimated using visual interpretation 1
+
+Deng and Clausi
+2005 [84]
+
+ENVISAT (HH)/mean
+
+68% for FYI and 96% for FYI, estimated using AARI
+ice charts
+
+Zakhvatkina et al.,
+2013 [89]
+
+RS-1, ENVISAT/texture
+
+ice/water; estimated with confidence level using
+visual interpretation 1
+
+Haarpainter and
+Solbo 2007 [90]
+
+RS-2 (quad-pol)/polarimetric parameters =
+couple of best 3 parameters
+combinations selected
+
+90.63% for three ice classes and OW; estimated using
+independent test dataset of ground truth points
+
+Gill and Yackel (2012)
+[57]
+
+ERS-1, RS-1/mean + LUT of expected
+backscatter + air temperature
+(Bayesian rule)
+
+four ice types (winter), and 2–3 classes(summer)
+
+Kwok 1992 [22]
+Fetterer et al., 1994
+(see details above)
+[23]
+
+RS-2 (quad-pol)/co- and cross-pol ratio
++ kurtosis
+
+7 classes; estimated using 2 training images 1
+
+Moen et al., 2015 [51]
+
+RS-2 (CP-pol using RCM simulator)/23
+statistical parameters + Jeffries-Matusit
+distances = selected sets of the best CP
+parameters combinations
+
+~100% for MYI, FYI and OW; estimated using
+independent test dataset
+
+Daboor and
+Geldsetzer, 2014 [60]
+
+ERS-2 (VV) and RS-1 (HH)/mean + texture
+
+84% for six classes; estimated using independent
+test dataset
+
+Bogdanov et al., 2005
+[91]
+
+ERS-2/texture
+
+8 classes; estimated using visual comparison 1
+
+Kaleschke and Kern
+2002 [92]
+
+RS-2 (HH, HV)/polarization and gradient
+ratios of four AMSR2 radiometer channels
+
+Baltic ice concentration is underestimated with
+signed error 3.9% using FMI ice charts independent
+test dataset of 10 scenes
+
+Karvonen, 2014
+(see details above)
+[34]
+
+S1 (HH, HV)/mean, texture, polarization
+and gradient ratios of four AMSR2
+radiometer channels
+
+Baltic ice concentration is overestimated with signed
+error 3.8% using FMI ice charts independent test
+dataset of for 50 scenes
+
+Karvonen 2017 [35]
+
+ENVISAT (HH)/mean + texture
+
+80% for 4 classes; estimated using independent
+20 scenes
+
+Zakhvatkina et al.,
+2013 [89]
+
+TerraSAR-X (VV)/texture
+
+~83% for three ice classes and OW; estimated using
+test datasets from 3 scenes
+
+Ressel et al, 2015 [52]
+
+TerraSAR-X (HH, VV)/co-pol ratio,
+polarimetric features
+
+~95% for three ice classes and OW; estimated using
+test datasets from 3 scenes
+
+Ressel et al, 2016 [45]
+
+ALOS-2 and S1(HH, HV)/co- and cross-pol
+ratios, incidence angle,
+autocorrelation (texture)
+
+S1: 87.23% and 89.33%; ALOS-2: 84.17% and 85.2%
+for three classes compared with manual ice charts
+and the AMSR2 data; estimated using independent
+12 S1 and 13 ALOS-2 scenes respectively
+
+Aldenhoff et al., 2018
+[69]
+
+RS-2/texture + IRGS segmentation
+
+96.5% for ice edge/open water; estimated over
+groundtruthed 20 scenes
+
+Leigh et al., 2014 [39]
+
+RS-2/texture + decision tree
+
+91.7% for four ice classes and OW; estimated using
+independent test dataset
+
+Liu et al., 2015 [93]
+
+RS-2/texture
+
+91.4% for ice edge/open water; estimated using
+2700 scenes in comparison with MET
+Norway product
+
+Zakhvatkina et al.,
+2017 [94]
+
+S1/mean, incidence angle, ancillary data
+
+82.8 % for ice edge/open water; estimated using
+226 scenes in comparison with MASIE 4 product
+
+Hong and Yang 2018
+[95]
+
+1 Numerical accuracy not provided. The authors mentioned that no general validation is presented because there
+was one or several scenes and lack of a representative dataset. 2 CBERS-02B is the China-Brazil Earth Resources
+Satellite (optical images). 3 PCA, principal component analysis. 4 MASIE, Multisensor Analyzed Sea Ice Extend
+product, provided by NIC.
+
+Geosciences 2019, 9, 152
+
+9 of 15
+
+Numerous attempts have been made to develop an automatic algorithm for ice/ocean
+discrimination using SAR data [28,31,48,90,96]. Based on the early studies in [80,86], a novel method
+of automatic detection of the ice edge in dual-polarized RS-2 SAR images was proposed to employ
+the curvelet transform and active contour method [97]. Comparison of the ice edge with that from
+manually analyzed SAR images demonstrates the effective detection of the ice edge in SAR images by
+the proposed method.
+A semi-automated sea ice classification algorithm based on fuzzy rules is presented in [96] for
+RS-1 data over the Arctic Ocean and has been evaluated for retrieval of the calm OW, wind-roughened
+water, and sea ice in low and high concentrations. This semi-automatic fuzzy-logic algorithm was
+extended for sea ice classification using derived statistical and texture image features [98]. GLCM
+entropy measure was found to be effective in classifying SAR images. The described methods were
+used by the DMI.
+Another cluster of algorithms for the goals of automated SAR data processing to retrieve sea ice
+parameters are supervised learning classifications. The supervised learning method requires a training
+dataset with known samples for the algorithm tuning, and hence the SAR pre-processing to investigate,
+identify and assign labels to the predefined classes via ice expertise (for instance) is needed. One of the
+popular methods is neural networks, which gain over the more traditional statistical approaches the
+ability to implement only the actual data without any prior knowledge on the statistical distribution of
+the data and determination of their informational content [99]. Another supervised machine learning
+algorithm widely applied to both sea ice types and ice/water classification last years is a support
+vector machine [100]. The methods of supervised learning also include a Bayesian classification that
+is widely used as a theoretically reliable image classification. The difference from other classification
+methods is that the Bayesian approach is based on the known of a priory probability of a class object
+existence [101,102]. The combination of these methods and texture features in addition to various
+segmentation techniques is also successfully used for sea ice type classification.
+Several early studies present the successful application of NN in the development of algorithms for
+sea ice classification from satellite images (e.g., [103–105]). Karvonen [106] presented the pulse-coupled
+NN for ice edge detection, segmentation and ice classification in RADARSAT SAR images of the Baltic
+Sea. The results show the correct classification of new, level FYI, deformed and fast ice, although
+thick fast ice was classified in some cases as thin level ice. This approach is widely investigated and
+extended, has several iterations according to the data and some features, and now modified techniques
+are designed and applied in the routine process of concentration and thickness ice charts drawing in
+FIS over Baltic Sea for all seasons [34,35].
+Bogdanov et al. [91] compared the NN classification with the other supervised learning algorithm
+based on the linear discriminant analysis (LDA), presented in [107], for ice classification. A multi-layer
+feed-forward NN was applied to recognize six sea ice types in RADARSAT and ERS SAR images of the
+Kara Sea. The results of automated classification (see Table 1) are significantly improved by applying
+the multisensors approach (up to 91.2% and 90.1% for NN and LDA methods, respectively). A NN
+with texture features based on the GLCM was used for classification of ENVISAT ASAR images [89],
+where the approach of two consistent application of differently trained NN was proposed to improve
+sea ice types and OW discriminating using one polarization. The same approach is shown in [93] for
+the sea ice type classification of RS-2 dual-polarization images using the second SVM in combination
+with texture features. Liu et al. [93] reasoned that ice concentration should be exploited during the
+first initial SVM classification and applied as one of the input parameters for a second SVM iteration.
+They also applied the ML classification to compare its results with the SVM classification. In conclusion,
+the SVM was found to be more reliable for sea ice classification than ML. SVM is successfully utilized in
+MAp-Guided Sea Ice Classification system [40] (see Table 1). This system has been under development
+by MAGIC research group for many years, investigating, applying and improving the combination of
+various texture extraction, image segmentation and classification approaches [36,37,40,85]. A similar
+
+Geosciences 2019, 9, 152
+
+10 of 15
+
+approach applying SVM with backscatter and texture features is presented in [95,108] (see Table 1) for
+classification of S1 data.
+The geostatistical approach to automated classification of sea ice from SAR data proposed in [109],
+where various function values are derived from sub-images in several directions. The classification
+is then based on feature vectors of parameters (various parameters) calculated from the various
+functions to summarize spatial sea ice properties. The result yields a segmentation of the study
+area into homogeneous regions of different sea ice types. It is summarized that a combination of
+supervised classification (ML) and various parameter mapping yields best results, correctly identifying
+several sea ice provinces. A province can contain several sea ice types that have experienced the same
+morphogenetic, kinematic and dynamic processes. Therefore, the geostatistical-statistical classification
+may be applied to detect processes describing physical characteristics dynamics and deformation
+states of sea ice.
+6. Conclusions
+Visual interactive interpretation of satellite imagery to derive sea ice information is the main
+technique for ice charting in several national ice services. The quality of ice classification depends on
+the skills and experience of ice experts. Experts with experience of airborne visual ice reconnaissance
+interpret the data of the optical spectral range quite successfully. Visual interpretation of radar data is
+quite difficult.
+Many researchers are skeptical about using only SAR data for ice type classifications or thickness
+retrieval. The sea ice parameters retrieval from SAR images using the only backscatter is considered
+unreliable, and the additionally provided other sources (sensors) data to improve the results is
+welcomed. The possibilities of combining high resolution SAR together with optical data are of
+great interest due to the wide coverage that SAR offers. However, regular monitoring of the sea ice
+in the high latitude Arctic in a combination of space-borne SAR and visual spectral range data is
+limited by the polar night when the sea ice monitoring is highly required. In general, many papers
+demonstrate that single-frequency sea ice classification results show some class confusion compared
+with the reference results, indicating radar wavelength dependent limitations for ice type separation.
+Observations from several SAR frequencies would be of interest to get the most information about sea
+ice parameters to implement ice classification. Combining of all these researchers’ “wishlist” for the
+accurate routinely mapping of ice in operational regime is restricted by the complexity of near-real-time
+collocated SAR images acquisition, financial means, computation time and at present is possible only
+for commercial projects.
+Since HV polarization is good to use to distinguish highly smooth surfaces from rough surfaces,
+utilizing the co-polarization ratios are recommended as well as additional extracted statistical
+and textural features. New possibilities open up with CP data since they have more polarization
+information, and give the opportunities to extract new polarimetric features that will improve the ice
+classification results.
+The more consistent SAR image classification result is reached when the processing chain in
+general comprises the following major steps: (1) image pre-processing (calibration, incidence angular
+correction, noise correction, filtering, etc.); (2) allocation of ice objects in the case of segmentation usage;
+(3) image features extraction; and (4) classification. Most methods typically based on a combination of
+backscatter intensity, second order texture statistics, and some ancillary information applying different
+numerical models for segmentation and/or classification. A huge number of investigations have been
+proposed to develop sea ice types or ice edge/open water classifications techniques, but closer to real
+fully- or semi-automatic systems are based on NN or SVM methods.
+Based on this review of the ice cover classification studies using high-resolution SAR images,
+it seems to be possible to automate main ice types retrieval as well as discriminate ice and OW. The sea
+ice services use satellite SAR images as the major data source, but the daily operation of sea ice is done
+
+Geosciences 2019, 9, 152
+
+11 of 15
+
+manually by ice analysts, especially for providing detailed ice charts. This process is very laborious
+and subjective, so the development of the robust automated ice mapping algorithms is still a hot topic.
+Funding: This research was funded by Russian Foundation of Basic Research (grant 18-05-60124).
+Conflicts of Interest: The authors declare no conflict of interest.
+
+References
+1.
+2.
+3.
+
+4.
+5.
+6.
+7.
+8.
+9.
+
+10.
+
+11.
+12.
+13.
+14.
+15.
+16.
+17.
+18.
+19.
+
+20.
+21.
+
+Scheuchl, B.; Flett, D.; Caves, R.; Cumming, I. Potential of RADARSAT-2 data for operational sea ice
+monitoring. Can. J. Remote Sens. 2004, 30, 448–461. [CrossRef]
+Smirnov, V.G. Satellite Methods for Determination of Sea Ice Cover Characteristics; AARI: St. Petersburg, Russia,
+2011. (In Russian)
+Jackson, C.R.; Apel, J.R. Synthetic Aperture Radar Marine User’s Manual; US Department of Commerce,
+National Oceanic and Atmospheric Administration, National Environmental Satellite, Data, and Information
+Serve, Office of Research and Applications: Washington, DC, USA, 2004.
+Dierking, W. Mapping of different sea ice regimes using images from Sentinel-1 and ALOS synthetic aperture
+radar. IEEE Trans. Geosci. Remote Sens. 2010, 48, 1045–1058. [CrossRef]
+Dierking, W. Sea ice monitoring by synthetic aperture radar. Oceanography 2013, 26, 100–111. [CrossRef]
+World Meteorological Organization. WMO Sea Ice Nomenclature; WHO: Geneva, Switzerland, 1989.
+Krovotyntsev, V.; Milekhin, O.E. Characteristics of the radar backscattering of the Arctic sea ice using
+Okean-O1 data. Stud. Earth Space 1998, 2, 68–80. (In Russian)
+Ramsay, B.; Manore, M.; Weir, L.; Wilson, K.; Bradley, D. Use of RADARSAT Data in the Canadian Ice Service.
+Can. J. Remote Sens. 1998, 24, 36–42. [CrossRef]
+Scheuchl, B.; Caves, R.; Flett, D.; De Abr, R.; Arkett, M.; Cumming, I. The potential of cross-polarization
+information for operational sea ice monitoring. In Proceedings of the Envisat and ERS Symposium, Salzburg,
+Austria, 6–10 September 2004.
+Dierking, W.; Skriver, H.; Gudmandsen, P. On the improvement of sea ice classification by means of radar
+polarimetry. In Proceedings of the 23rd European Association of Remote Sensing Laboratories (EARSeL)
+Symposium, Ghent, Belgium, 2–5 June 2004; Goossens, R., Ed.; Millpress: Rotterdam, The Netherlands, 2004;
+pp. 203–209.
+SIGRID-3: A Vector Archive Format for Sea Ice Georeferenced Information and Data; JCOMM Technical Report
+Series No. 23; WMO/TD-No.1214; World Meteorological Organization: Geneva, Switzerland, 2014.
+Sea Ice Information Services in the World; WMO-No.574; World Meteorological Organization: Geneva,
+Switzerland, 2017.
+Similä, M.; Lensu, M. Estimating the Speed of Ice-Going Ships by Integrating SAR Imagery and Ship Data
+from an Automatic Identification System. Remote Sens. 2018, 10, 1132. [CrossRef]
+Bushuev, A.V.; Volkov, N.A. Remote Measurements of Ice Cover Parameters; Hydrometeoizdat: Leningrad,
+Russia, 1977. (In Russian)
+Asmus, V.; Krovotyntsev, V. ; Pyatkin. V. Software Technologies in Satellite Monitoring of the Arctic Ice
+Cover. J. Sib. Fed. Univ. Eng. Technol. 2015, 6, 680–689. (In Russia) [CrossRef]
+Ulaby, F.T.; Moore, R.K.; Fung, A.K. Microwave Remote Sensing: Active and Passive; Addison-Wesley: Reading,
+MA, USA, 1981.
+Barber, D.G. Microwave remote sensing, sea ice and Arctic climate. Phys. Can. 2005, 61, 105–111.
+Bushuev, A.V.; Bychenkov, Y.D.; Loschilov, V.S.; Masanov, A.D. Investigation of Ice Cover with Help of
+Side-Looking Radar (SLR); Hydrometeoizdat: Leningrad, Russia, 1983. (In Russian)
+Haverkamp, D.; Soh, L.K.; Tsatsoulis, C. A dynamic local thresholding technique for sea ice classification.
+In Proceedings of the IEEE International Geoscience and Remote Sensing Symposium, Tokyo, Japan,
+18–21 August 1993; pp. 638–640.
+Haverkamp, D.; Soh, LK.; Tsatsoulis, C. A comprehensive, automated approach to determining sea ice
+thickness from SAR data. IEEE Trans. Geosci. Remote Sens. 1995, 33, 46–57. [CrossRef]
+Kwok, R.; Baltzer, T. The geophysical processor system at the Alaska SAR Facility. Photogramm. Eng. Remote Sens.
+1995, 61, 1445–1453.
+
+Geosciences 2019, 9, 152
+
+22.
+23.
+24.
+25.
+26.
+
+27.
+28.
+29.
+30.
+31.
+32.
+33.
+34.
+35.
+36.
+37.
+38.
+39.
+40.
+41.
+
+42.
+
+43.
+
+44.
+
+12 of 15
+
+Kwok, R.; Holt, B. Identification of Sea Ice Types in Spaceborne Synthetic Aperture Radar Data.
+J. Geophys. Res. 1992, 97, 2391–2402. [CrossRef]
+Fetterer, F.M.; Gineris, D.; Kwok, R. Sea ice type maps from Alaska Synthetic Aperture Radar Facility
+imagery: An assessment. J. Geophys. Res. 1994, 99, 22443–22458. [CrossRef]
+Bertoia, C.; Manore, M.; Andersen, H.S. Mapping Ice Covered Waters from Space; Agencies and Staff of the US
+Department of Commerce: Washington, DC, USA, 2001.
+Fetterer, F.; Ye, J. Multi-year ice concentration from Radarsat. In Proceedings of the IEEE International
+Geoscience and Remote Sensing Symposium, Singapore, 3–8 August 1997; Volume 1, pp. 402–404.
+Bertoia, C.; Gineris, D.; Partington, K.; Soh, L.-K.; Tsatsoulis, C. Transition from research to operations:
+ARKTOS-a knowledge-based sea ice classification system. In Proceedings of the IEEE International Geoscience
+and Remote Sensing Symposium, Hamburg, Germany, 28 June–2 July 1999; Volume 3, pp. 1573–1575.
+Soh, L.; Tsatsoulis, C. ARCTOS: A Knowledge Engineering Software Tool for Images. Int. J. Hum. Comput. Stud.
+2002, 57, 469–496. [CrossRef]
+Soh, L.; Tsatsoulis, C.; Gineris, D.; Bertoia, C. ARCTOS: An Intelligent System for SAR Sea Ice Image
+Classification. IEEE Trans. Geosci. Remote Sens. 2004, 42, 229–248. [CrossRef]
+Kwok, R. The RADARSAT Geophysical Processor System. In Analysis of SAR Data of the Polar Oceans;
+Springer: Berlin/Heidelberg, Germany, 1998; pp. 235–257.
+Kwok, R.; Cunninghan, G. Radarsat Geophysical Processor System; User Handbook. Version 1.0; National
+Aeronautics and Space Administration: Pasadena, CA, USA, 2000.
+Karvonen, J.; Simila, M.; Makynen, M. Open water detection from Baltic Sea ice Radarsat-1 SAR imagery.
+IEEE Geosci. Remote Sens. Lett. 2005, 2, 275–279. [CrossRef]
+Karvonen, J. C-band sea ice SAR classification based on segmentwise edge features. In Geoscience and Remote
+Sensing New Achievements; Imperatore, P., Riccio, D., Eds.; In-Tech: Vienna, Austria, 2010; pp. 129–146.
+Karvonen, J. Operational SAR-based sea ice drift monitoring over the Baltic Sea. Ocean Sci. 2012, 8, 473–483.
+[CrossRef]
+Karvonen, J.A. A sea ice concentration estimation algorithm utilizing radiometer and SAR data. Cryosphere
+2014, 8, 1639–1650. [CrossRef]
+Karvonen, J. Baltic Sea ice concentration estimation using SENTINEL-1 SAR and AMSR2 microwave
+radiometer data. IEEE Trans. Geosci. Remote Sens. 2017, 55, 2871–2883. [CrossRef]
+Maillard, P.; Clausi, D.A.; Deng, H. Map-guided sea ice segmentation and classification using SAR imagery
+and a MRF segmentation scheme. IEEE Trans. Geosci. Remote Sens. 2005, 43, 2940–2951. [CrossRef]
+Clausi, D.A.; Qin, A.K.; Chowdhury, M.S.; Yu, P.; Maillard, P. MAGIC: MAp-Guided Ice Classification System.
+Can. J. Remote Sens. 2010, 36, S13–S25. [CrossRef]
+Yu, Q.; Clausi, D.A. IRGS: Image segmentation using edge penalties and region growing. IEEE Trans.
+Pattern Anal. 2008, 30, 2126–2139.
+Ochilov, S.; Clausi, D.A. Operational SAR sea-ice image classification. IEEE Trans. Geosci. Remote Sens. 2012,
+50, 4397–4408. [CrossRef]
+Leigh, S.; Wang, Z.; Clausi, D.A. Automated ice–water classification using dual polarization SAR satellite
+imagery. IEEE Trans. Geosci. Remote Sens. 2014, 52, 5529–5539. [CrossRef]
+Hughes, N.; Wadhams, P. Dual-Polarisation SAR Sea Ice Type Classification and Iceberg Detection in the
+western Fram Strait. In Proceedings of the ESA Conference on Earth Observation and Cryospheric Science,
+Frascati, Italy, 13–16 November 2012.
+Dinessen, F. Operational multisensor sea ice concentration algorithm utilizing Sentinel-1 and AMSR2 data.
+Geophysical Research Abstracts, EGU2017-19037. In Proceedings of the 19th EGU General Assembly,
+EGU2017, Vienna, Austria, 23–28 April 2017; Volume 19.
+Arkett, M.; Flett, D.; De Abrea, R. Sea Ice Type and Open Water Discrimination for Operational Ice Monitoring
+with RADARSAT-2. In Proceedings of the IEEE International Geoscience and Remote Sensing Symposium,
+Denver, CO, USA, 31 July–4 August 2006; pp. 1631–1635.
+Nakamura, K.; Wakabayashi, H.; Naoki, K.; Nishio, F.; Moriyama, T.; Uratsuka, S. Observation of sea-ice
+thickness in the Sea of Okhotsk by using dual-frequency and fully polarimetric airborne SAR (Pi-SAR) data.
+IEEE Trans. Geosci. Remote Sens. 2005, 43, 2460–2469. [CrossRef]
+
+Geosciences 2019, 9, 152
+
+45.
+
+46.
+47.
+48.
+49.
+50.
+
+51.
+52.
+53.
+54.
+55.
+
+56.
+57.
+58.
+
+59.
+
+60.
+61.
+
+62.
+
+63.
+
+64.
+65.
+66.
+
+13 of 15
+
+Ressel, R.; Singha, S.; Lehner, S.; Rosel, A.; Spreen, G. Investigation into Different Polarimetric Features for
+Sea Ice Classification Using X-Band Synthetic Aperture Radar. IEEE J. Sel. Top. Appl. Earth Obs. Remote Sens.
+2016, 9, 3131–3143. [CrossRef]
+Collins, M.J.; Livingstone, C.E.; Raney, R.K. Discrimination of sea ice in the Labrador marginal ice zone from
+synthetic aperture radar image texture. Int. J. Remote Sens. 1997, 18, 535–571. [CrossRef]
+Nakamura, K.; Wakabayashi, H.; Uto, S.; Naoki, K.; Nishio, F.; Uratsuka, S. Sea-ice thickness retrieval in the
+Sea of Okhotsk using dual-polarization SAR data. Ann. Glaciol. 2006, 44, 261–268. [CrossRef]
+Geldsetzer, T.; Yackel, J. Sea ice type and open water discrimination using dual co-polarized C-band SAR.
+Can. J. Remote Sens. 2009, 35, 73–84. [CrossRef]
+Yu, P.; Qin, A.K.; Clausi, D.A. Feature extraction of dual-pol SAR imagery for sea ice image segmentation.
+Can. J. Remote Sens. 2012, 38, 352–366. [CrossRef]
+Manore, M.; Flett, D.G.; De Abreu, R.A.; Ramsay, B.R. Multi-polarization SAR data for operational ice
+monitoring. In Proceedings of the IEEE Geoscience and Remote Sensing Symposium, Sydney, Australia,
+9–13 July 2001; Volume 3, pp. 1246–1248.
+Moen, M.-A.N.; Anfinsen, S.N.; Doulgeris, A.P.; Renner, A.H.H.; Gerland, S. Assessing polarimetric SAR
+sea-ice classifications using consecutive day images. Ann. Glaciol. 2015, 56, 285–294. [CrossRef]
+Ressel, R.; Frost, A.; Lehner, S. A Neural Network-Based Classification for Sea Ice Types on X-Band SAR
+Images. IEEE J. Sel. Top. Appl. Earth Obs. Remote Sens. 2015, 8, 3672–3680. [CrossRef]
+Johansson, A.M.; Brekke, C.; Spreen, G.; King, J.A. X-, C-, and L-band SAR signatures of newly formed sea
+ice in Arctic leads during winter and spring. Remote Sens. Environ. 2018, 204, 162–180. [CrossRef]
+Freeman, T.; Durden, S.L. A three-component scattering model for polarimetric SAR data. IEEE Trans. Geosci.
+Remote Sens. 1998, 36, 963–973. [CrossRef]
+Scheuchl, B.; Caves, R.; Cumming, I.; Staples, G. Automated Sea Ice Classification Using Spaceborne
+Polarimetric SAR Data. In Proceedings of the IEEE International Geoscience and Remote Sensing Symposium,
+Scanning the Present and Resolving the Future, Sydney, Australia, 9–13 July 2001; IEEE Cat. No.01CH37217.
+Scheuchl, B.; Cumming, I.G.; Hajnsek, I. Classification of fully polarimetric single- and dual-frequency SAR
+data of sea ice using the Wishart statistics. Can. J. Remote Sens. 2005, 31, 61–72. [CrossRef]
+Gill, J.P.S.; Yackel, J.J. Evaluation of C-band SAR polarimetric parameters for discriminating of first-year sea
+ice types. Can. J. Remote Sens. 2012, 38, 306–323. [CrossRef]
+Moen, M.-A.N.; Doulgeris, A.P.; Anfinsen, S.N.; Renner, A.H.H.; Hughes, N.; Gerland, S.; Eltoft, T.
+Comparison of feature based segmentation of full polarimetric SAR satellite sea ice images with manually
+drawn ice charts. Cryosphere 2013, 7, 1693–1705. [CrossRef]
+Dabboor, M.; Shokr, M. A new Bayesian likelihood ratio test for supervised classification of fully polarimetric
+SAR data: An application for sea ice type mapping. ISPRS J. Photogramm. Remote Sens. 2013, 84, 1–11.
+[CrossRef]
+Dabboor, M.; Geldsetzer, T. Towards sea ice classification using simulated RADARSAT constellation mission
+compact polarimetric SAR imagery. Remote Sens. Environ. 2014, 140, 189–195. [CrossRef]
+Singha, S.; Ressel, R. Arctic sea ice characterization using RISAT-1 compact-pol SAR imagery and feature
+evaluation: A case study over Northeast Greenland. IEEE J. Sel. Top. Appl. Earth Obs. Remote Sens. 2017,
+10, 3504–3514. [CrossRef]
+Dabboor, M.; Montpetit, B.; Howell, S. Assessment of the High Resolution SAR Mode of the RADARSAT
+Constellation Mission for First Year Ice and Multiyear Ice Characterization. Remote Sens. 2018, 10, 594.
+[CrossRef]
+Arkett, M.; Carrieres, T.; Zagon, T.; Zabeline, V.; Buehner, M.; Caya, A.; Pogson, L.; Luo, Y. Preparations by
+the Canadian Ice Service for Future Earth Observation Missions. In Proceedings of the Earth Observation
+and Cryosphere Science Conference, Frascati, Italy, 13–16 November 2012. ESA SP-712.
+Hara, Y.; Atkins, R.G.; Shin, R.T.; Kong, J.A.; Yueh, S.H.; Kwok, R. Application of Neural Networks for Sea
+Ice Classification in Polarimetric SAR Images. IEEE Trans. Geosci. Remote Sens. 1995, 33, 740–748. [CrossRef]
+Dierking, W.; Busche, T. Sea Ice Monitoring by L-Band SAR: An Assessment Based on Literature and
+Comparisons of JERS-1 and ERS-1 Imagery. IEEE Trans. Geosci. Remote Sens. 2006, 44, 957–970. [CrossRef]
+Bogdanov, A. Neuroinspired architecture for robust classifier fusion of multisensor imagery. IEEE Trans.
+Geosci. Remote Sens. 2008, 46, 1467–1487. [CrossRef]
+
+Geosciences 2019, 9, 152
+
+67.
+68.
+
+69.
+70.
+71.
+72.
+73.
+74.
+
+75.
+76.
+77.
+78.
+79.
+80.
+81.
+
+82.
+
+83.
+84.
+85.
+
+86.
+87.
+88.
+89.
+90.
+
+14 of 15
+
+Gupta, M.; Scharien, R.K.; Barber, D.G. C-band polarimetric coherences and ratios for discriminating sea ice
+roughness. Int. J. Oceanogr. 2013, 2013, 567182. [CrossRef]
+Casey, J.A.; Howell, S.E.; Tivy, A.; Haas, C. Separability of sea ice types from wide swath C- and L-band
+synthetic aperture radar imagery acquired during the melt season. Remote Sens. Environ. 2016, 174, 314–328.
+[CrossRef]
+Aldenhoff, W.; Heuzé, C.; Eriksson, L.E.B. Comparison of ice/water classification in Fram Strait from C- and
+L-band SAR imagery. Ann. Glaciol. 2018, 59, 112–123. [CrossRef]
+Dierking, W. Sea ice classification on different spatial scales for operational and scientific use. In Proceedings
+of the ESA Living Planet Symposium, Edinburgh, UK, 9–13 September 2013.
+Wohl, G.M. Operational sea ice classification from synthetic aperture radar imagery. Photogramm. Eng.
+Remote Sens. 1995, 61, 1455–1462.
+Haralick, R.; Shanmagan, K.; Dinstein, I. Textural features for image classification. IEEE Trans. Syst. Man Cybern.
+1973, 3, 610–621. [CrossRef]
+Shokr, M. Evaluation of second-order texture parameters for sea-ice classification from radar images.
+J. Geophys. Res. 1991, 96, 10625–10640. [CrossRef]
+Shuchman, R.A.; Wackerman, C.; Maffett, A.L.; Onstott, R.G.; Sutherland, L.L. The Discrimination of Sea Ice
+Types using SAR Backscatter Statistics. In Proceedings of the 12th Canadian Symposium on Remote Sensing
+Geoscience and Remote Sensing Symposium, Vancouver, BC, Canada, 10–14 July 1989; pp. 381–385.
+Holmes, Q.A.; Nuesch, D.R.; Shuchman, R.A. Textural analysis and real-time classification of sea ice types
+using digital SAR data. IEEE Trans. Geosci. Remote Sens. 1984, 22, 113–120. [CrossRef]
+Barber, D.G.; LeDrew, E.F. SAR sea ice discrimination using texture statistics, A multivariate approach.
+Phtogram. Eng. Remote Sens. 1991, 57, 385–395.
+Barber, D.G.; Shokr, M.; Soulis, E.; Fernandes, R.; Flett, D.; LeDrew, E.F. A comparison of second order texture
+classifiers for SAR sea ice. Photogramm. Eng. Remote Sens. 1993, 59, 1397–1408.
+Baraldi, A.; Parmigiani, F. An investigation of the textural characteristics associated with gray level
+cooccurrence matrix statistical parameters. IEEE Trans. Geosci. Remote Sens. 1995, 33, 293–304. [CrossRef]
+Clausi, D.A. An analysis of co-occurrence texture statistics as a function of grey level quantization. Can. J.
+Remote Sens. 2002, 28, 45–62. [CrossRef]
+Liu, A.K.; Martin, S.; Kwok, R. Tracking of ice edges and ice floes by wavelet analysis of SAR images. J. Atmos.
+Ocean. Tech. 1997, 14, 1187–1198. [CrossRef]
+Yu, Q.; Moloney, C.; Williams, F.M. SAR sea-ice texture classification using discrete wavelet transform based
+methods. In Proceedings of the IEEE Geoscience and Remote Sensing Symposium, Toronto, ON, Canada,
+24–28 July 2002; Volume 5, pp. 3041–3043.
+Simila, M.; Helminen, J. The identification of the deformed sea ice fields from ERS-1 SAR image by wavelets.
+In Proceedings of the IEEE Geoscience and Remote Sensing Symposium, Firenze, Italy, 10–14 July 1995;
+Volume 2, pp. 868–870.
+Clausi, D.A.; Yue, B. Comparing Cooccurrence Probabilities and Markov Random Fields for Texture Analysis
+of SAR Sea Ice Imagery. IEEE Trans. Geosci. Remote Sens. 2004, 42, 215–228. [CrossRef]
+Deng, H.; Clausi, D.A. Unsupervised segmentation of synthetic aperture Radar sea ice imagery using a novel
+Markov random field model. IEEE Trans. Geosci. Remote Sens. 2005, 43, 528–538. [CrossRef]
+Similä, M.; Dinessen, F.; Hughes, N.E.; Mäkynen, M. Ice edge detection with dual-polarized SAR data.
+In Proceedings of the 22nd International Conference on Port and Ocean Engineering under Arctic Conditions,
+Espoo, Finland, 9–13 June 2013.
+Gill, R.S. Operational detection of sea ice edges and icebergs using SAR. Can. J. Remote Sens. 2001, 27, 411–432.
+[CrossRef]
+Liu, M.; Dai, Y.; Zhang, J.; Zhang, X.; Meng, J.; Xie, Q. PCA-based sea-ice image fusion of optical data by HIS
+transform and SAR data by wavelet transform. Acta Oceanol. Sin. 2015, 34, 59–67. [CrossRef]
+Soh, L.K.; Tsatsoulis, C. Texture analysis of SAR imagery using grey level co-occurrence matrices. IEEE Trans.
+Geosci. Remote Sens. 1999, 37, 780–795. [CrossRef]
+Zakhvatkina, N.; Alexandrov, V.; Johannessen, O.M.; Sandven, S.; Frolov, I. Classification of sea ice types in
+ENVISAT synthetic aperture radar images. IEEE Trans. Geosci. Remote Sens. 2013, 51, 2587–2600. [CrossRef]
+Haarpainter, J.; Solbo, S. Automatic Ice-Ocean Discrimination in SAR Imagery; Norut IT-Rapport; NORUT
+Northern Research Institute: Tromsø, Norway, 2007.
+
+Geosciences 2019, 9, 152
+
+15 of 15
+
+91.
+
+Bogdanov, A.V.; Sandven, S.; Johannessen, O.M.; Alexandrov, V.Y.; Bobylev, L.P. Multisensor approach
+to automated classification of sea ice image data. IEEE Trans. Geosci. Remote Sens. 2005, 43, 1648–1664.
+[CrossRef]
+92. Kaleschke, L.; Kern, S. ERS-2 SAR image analysis for sea ice classification in the marginal ice zone.
+In Proceedings of the 22nd International Geoscience and Remote Sensing Symposium, Toronto, ON, Canada,
+24–28 June 2002; Institute of Electrical and Electronics Engineers: Piscataway, NJ, USA; pp. 3038–3040.
+93. Liu, H.; Guo, H.; Zhang, L. SVM-based sea ice classification using textural features and concentration from
+RADARSAT-2 dual-pol ScanSAR data. IEEE J. Sel. Top. Appl. Earth Obs. Remote Sens. 2015, 8, 1601–1613.
+[CrossRef]
+94. Zakhvatkina, N.; Korosov, A.; Muckenhuber, S.; Sandven, S.; Babiker, M. Operational algorithm for ice–water
+classification on dual-polarized RADARSAT-2 images. Cryosphere 2017, 11, 33–46. [CrossRef]
+95. Hong, D.; Yang, C.S. Automatic discrimination approach of sea ice in the Arctic Ocean using Sentinel-1 Extra
+Wide Swath dual-polarized SAR data. Int. J. Remote Sens. 2018, 39, 4469–4483. [CrossRef]
+96. Gill, R.S. SAR Ice Classification Using Fuzzy Screening Method; Scientific Report 02-12; Scientific Report 02-12;
+Danish Meteorological Institute: Copenhagen, Danmark, 2002.
+97. Liu, J.; Scott, K.A.; Gawish, A.; Fieguth, P. Automatic Detection of the Ice Edge in SAR Imagery Using
+Curvelet Transform and Active Contour. Remote Sens. 2016, 8, 480. [CrossRef]
+98. Gill, R.S.; Tonboe, R.T. Classification of GreenIce SAR data using fuzzy screening method. In Arctic Sea Ice
+Thickness: Past, Present and Future; Wadhams, P., Amanatidis, G., Eds.; Climate Change and Natural Hazards
+Series 10, EUR22416; European Commission: Brussels, Belgium, 2006.
+99. Benediktsson, J.A.; Ersoy, O.K. Neural Network Approaches Versus Statistical Methods in Classification of
+Multisource Remote Sensing Data win. IEEE Trans. Geosci. Remote Sens. 1990, 28, 540–552. [CrossRef]
+100. Cortes, C.; Vapnik, V. Support-Vector Networks. Mach. Learn. 1995, 20, 273–297. [CrossRef]
+101. Verspeek, J.A. Sea Ice Classification Using Bayesian Statistics; Royal Netherlands Meteorological Institute
+(KNMI): De Bilt, The Netherlands, 2006; 30p.
+102. OSI SAF Sea Ice Product Manual, v. 3.11 ed.; Eumetsat: Copenhagen, Danmark, 2014.
+103. Heerman, P.D.; Khazenie, N. Classification of Multispectral Remote Sensing Data Using a Back-Propagation
+Neural Network. IEEE Trans. Geosci. Remote Sens. 1992, 30, 81–88. [CrossRef]
+104. Atkinson, P.M.; Tatnall, A.R.L. Neural network in remote sensing. Int. J. Remote Sens. 1997, 18, 669–709.
+[CrossRef]
+105. Mejia, C.; Thiria, S.; Tran, N.; Crépon, M.; Badran, F. Determination of the Geophysical Model Function of
+the ERS-1 Scatterometer by the Use of Neural Networks. J. Geophys. Res. 1998, 103, 12853–12868. [CrossRef]
+106. Karvonen, J.A. Baltic Sea ice SAR segmentation and classification using modified pulse-coupled neural
+networks. IEEE Trans. Geosci. Remote Sens. 2004, 42, 1566–1574. [CrossRef]
+107. Wackerman, C.C.; Miller, D.L. An Automated Algorithm for Sea Ice Classification in the Marginal Ice Zone Using
+ERS-1 Synthetic Aperture Radar Imagery; ERIM: Ann Arbor, MI, USA, 1996.
+108. Korosov, A.; Park, J.-W. Very high resolution classification of Sentinel-1A data using segmentation and texture
+features. In Proceedings of the European Space Agency Living Planet Symposium, Prague, Czech Republic,
+9–13 May 2016; Volume 740.
+109. Herzfeld, U.C.; Williams, S.; Heinrichs, J.; Maslanik, J.; Sucht, S. Geostatistical and Statistical Classification of
+Sea-Ice Properties and Provinces from SAR Data. Remote Sens. 2016, 8, 616. [CrossRef]
+© 2019 by the authors. Licensee MDPI, Basel, Switzerland. This article is an open access
+article distributed under the terms and conditions of the Creative Commons Attribution
+(CC BY) license (http://creativecommons.org/licenses/by/4.0/).
+
+

@@ -1,0 +1,334 @@
+IGARSS 2024 - 2024 IEEE International Geoscience and Remote Sensing Symposium | 979-8-3503-6032-5/24/$31.00 ©2024 IEEE | DOI: 10.1109/IGARSS53475.2024.10642362
+
+SEA ICE CLASSIFICATION USING COMBINED SENTINEL-1 AND SENTINEL-3 DATA
+Stefan Wiehle1, Dmitrii Murashkin1, Anja Frost1, Christine König2, Thomas König2
+1: German Aerospace Center (DLR), Maritime Safety and Security Lab Bremen, Germany
+2: König und Partner Fernerkundung GbR, Dießen am Ammersee, Germany
+ABSTRACT
+
+affected by precipitation: wet snow obscures information
+about underlying ice types [4] which results in
+misclassifications.
+In order to overcome misclassifications, we utilize
+collocated classifications based on optical-thermal data from
+the Sea and Land Surface Temperature Radiometer (SLSTR)
+of Sentinel-3 satellite mission. SLSTR measures the reflected
+sunlight in different bands which also include thermal
+information. Figure 1 illustrates the general workflow of the
+two classification strategies we analyze in this paper. The
+Sentinel-3 based classification is sketched in Chapter 2. The
+pure SAR-based classification is then described in Chapter 3.
+Section 4 goes into the fused approach. Our test results shown
+in Chapter 5 compare the pure SAR-based classification with
+the fused classification. This test deals with 100 Sentinel-1
+scenes and the same number of collocated Sentinel-3
+classifications taken over the Arctic ocean.
+
+We present a new approach for sea ice mapping based on
+Synthetic Aperture Radar (SAR) data from Sentinel-1 and an
+existing sea ice classification using optical-thermal data
+based on Sentinel-3. SAR and optical-thermal sensors
+provide different information about the sea ice situation:
+while SAR backscatter depends mainly on the topography of
+the sea ice surface and properties of the ice volume, optical
+sensors provide further information about the structure and
+moisture of ice and snow. In order profit from both sensors, a
+convolutional neural network (CNN) is trained with
+collocated images from both satellite missions. Compared to
+a pure SAR classification, the results of the combined
+approach show an improved classification reliability,
+especially in areas with open water.
+Index Terms— Sea ice classification, SAR, SLSTR,
+data fusion, remote sensing
+1. INTRODUCTION
+Sea ice is an essential component of the Arctic environment.
+Its coverage and thickness play an important role in weather
+forecasting and the global climate system [1]. In addition, sea
+ice has significant impacts on human activities in the polar
+regions, such as shipping and offshore constructions.
+Therefore, mapping and classifying sea ice is an important
+task to ensure the safety and efficiency of human activities
+without harming the sensitive Arctic region, and to support
+studies on climate and environmental research.
+As the polar regions are dark during winter time and, in
+particular, often covered by clouds, active microwave sensors
+such as Synthetic Aperture Radar (SAR) are a useful remote
+sensing tools for observing the polar sea ice and its evolution
+[1]. The data acquisition is generally unaffected by
+atmosphere, solar illumination, or clouds.
+However, to analyze long-term changes in the sea ice and
+therefore handle large amounts of data efficiently, automatic
+algorithms for classifying the sea ice are required.
+An abundance of approaches for SAR-based sea ice
+classification have been developed (e.g., [2]), summarized
+very comprehensively in [3]. Nevertheless, obtaining
+accurate classifications year-round is still a challenge.
+Different ice classes can show similar radar backscatter
+responses, which limits the performance of sea ice
+classification. Seasonally, the radar backscatter signal can be
+
+979-8-3503-6032-5/24/$31.00 ©2024 IEEE
+
+Figure 1: General data flow of the Sentinel-1
+classification and the combined Sentinel-1/Sentinel-3
+classification.
+2. OPTICAL-THERMAL CLASSIFICATION
+The Sentinel-3 SLSTR ice classification is an improved
+version of the ice differentiation algorithm presented in [5].
+Improvements have been made in cloud detection and the
+development of an operational processing chain that enables
+faster and therefore more up-to-date information to be
+provided to maritime users.
+The results of the algorithm are verified by comparing
+them with high-resolution optical remote sensing data,
+webcam recordings, the official sea-ice maps of ice services
+as well as the predictions of Canadian ice models. In addition
+to a wide field of view of approx. 1420 km, this pixel-based
+ice/snow classification has the ability to differentiate 17
+classes with a resolution of 500 m in both Arctic and
+Antarctic. An example is shown in Figure 2.
+
+102
+
+IGARSS 2024
+
+Authorized licensed use limited to: University of Texas of the Permian Basin. Downloaded on December 13,2025 at 06:58:54 UTC from IEEE Xplore. Restrictions apply.
+
+The output is an RGB color representation with smooth color
+transitions. Some of the main colors identified reflect classes
+ranging from open water to approximately 50 cm thick ice.
+Other colors could be assigned to snow surface properties, but
+without being able to determine specific ice thicknesses
+underneath. Figure 3 shows the complete legend. The
+reduction to the main colors is dispensed at this stage,
+because this would result in important information being lost
+unnecessarily. In addition, the results provided are better
+suited as input data for a neural network.
+If cloud cover is present in the SLSTR data, the
+representation is replaced by suitable shades of gray. In this
+process, two shades are reserved, namely (0,0,0) for land and
+(110,110,110) for background.
+3. SAR CLASSIFICATION
+Figure 2: Sentinel-3 SLSTR Sea ice Classification from
+K&P, Bering Strait 2022-04-10
+
+The classification for SAR uses Sentinel-1 Extended Wide
+Swath (EW) data, since EW is the preferred mode acquired
+over arctic waters and, hence, most suitable for frequently
+updated sea ice information. The classification used herein is
+presented and explained in detail in [6].
+After image preprocessing to reduce thermal noise, a
+Convolutional Neural Network (CNN) in a UNET++
+architecture is applied for classification. This is outlined in
+Figure 4. Its input data are both channels of the Sentinel-1
+EW mode (HH and HV) in tiles of 256x256 pixels. The
+encoder (red arrows) has a depth of six layers, whereas the
+decoder part (green arrows) has four layers. The column on
+the left shows the tile size at each depth level. Numbers in
+boxes show the input and the output tensor shapes.
+The output is in four times lower resolution, significantly
+reducing the processing time. For the 40 m pixel spacing of
+Sentinel-1 EW GRDM (ground range detected, medium
+resolution) data, this results in 160 m resolution for the
+classification product.
+The classifier distinguishes between six classes:
+• Smooth open water and leads
+• Rough open water and leads
+• New ice (up to ~30 cm)
+• First-year ice (up to ~1,5 m)
+• Multi-year ice (>1,5 m)
+• Rough ice (crushed ice, frost flower, ice ridges)
+Since SAR only detects the surface of the sea ice, the
+stage of development (new, first-year, multi-year, rough) and
+associated thickness can only be derived from the surface
+roughness.
+4. FUSED CLASSIFICATION
+The fused classification uses collocated input from both
+satellite missions, Sentinel-1 and Sentinel-3, with the goal to
+combine both different types of information to a
+sophisticated, more accurate sea ice classification product.
+During our study, multiple options were considered to
+determine the setup and output of the fused classification, e.g.
+
+Figure 3: Legend for Sentinel-3 SLSTR sea ice
+classification of K&P
+
+103
+Authorized licensed use limited to: University of Texas of the Permian Basin. Downloaded on December 13,2025 at 06:58:54 UTC from IEEE Xplore. Restrictions apply.
+
+Figure 4: CNN model for the SAR sea ice classification
+based on UNET++ architecture.
+classifying individually (as described in Sections 2 and 3),
+then combining both returned classes for each pixel. For the
+fusion presented here, we decided to use the Sentinel-1 data
+and the Sentinel-3 classification as input. Since the Sentinel-3
+classification still contains information as it is not limited to
+only a handful of classes and is extensively validated, this is
+considered an advantage compared to using L1 Sentinel-3
+data.
+The fused classification uses a CNN in UNET++
+architecture similar to the SAR classification. The input for
+the fusion consists of 5 channels: Sentinel-1 HH/HV and
+Sentinel-3 classification R/G/B. 150 manually labelled
+scenes were used in training.
+For processing, SAR and optical-thermal datasets have to be
+collocated, meaning their coverage and resolution must be
+matched, so that they can be used as stacked channels within
+one image. Therefore, first the Sentinel-1 scenes are warped
+to the same Coordinate Reference System (CRS) as the
+Sentinel-3 classification. Next, the spatial overlap is
+calculated and both scenes are cut to this extend. Then the
+Sentinel-3 data is upsampled from 500 m pixel spacing to the
+Sentinel-1 pixel spacing of 40 m. Once both images are
+aligned, a validity mask is created and used in post processing
+to filter out land, clouds, and no-data areas at scene
+boundaries. Hence, the number of actually valid classified
+pixels can be much less than the common scene extent,
+depending on land presence, geometric conditions and cloud
+coverage. For consistency, we do not to add the SAR
+classification in cloud-covered areas in the fusion product,
+but provide data only where both sources have data available.
+The temporal colocation between a SAR sensor acquiring
+at dusk/dawn and an optical sensor acquiring around noon is
+a challenge, since their acquisitions are usually several hours
+apart. For selecting scenes for the training data set, the
+maximum time difference was set to 12 hours. Since this
+resulted mostly in acquisition from the same day (either
+Sentinel-1 dawn and Sentinel-3 noon, or Sentinel-3 noon and
+Sentinel-1 dusk), the same limit could be set in operational
+use.
+
+Figure 5: Overview of the 100 Sentinel-1 scenes used
+along with collocated Sentinel-3 classifications.
+5. RESULTS
+The SAR and fusion classifications were tested on a
+collection of 100 Sentinel-1 acquisitions and collocated
+Sentinel-3 classifications spread all over the Arctic, shown in
+Figure 5. Two examples of the classifications (SAR, optical,
+fused) are shown in Figure 6 and Fehler! Verweisquelle
+konnte nicht gefunden werden..
+In many cases, both classifications showed consistent
+results, mostly determining first-year ice as expected for
+many parts of the dataset. Occasionally, the fusion results
+tend to show older/thicker ice than SAR, but without SAR’s
+frequent inclusion of small rough ice areas. This trend is
+visible in both Figs. 6 and 7. A possible explanation might be
+that the optical classification can only distinguish ice
+thicknesses up to ~50 cm and is sensitive also to snow cover,
+so first-year and multi-year ice are indistinguishable by the
+optical classification. Nevertheless, some of the features were
+apparently learned by the fusion CNN and result in an
+increased ice thickness estimate compared to the SAR-only
+classification. In other areas, on the other hand, such as the
+right part of Figure 7, the multi-year ice is reduced to firstyear ice.
+Figure 7 demonstrates an advantage for fusion when it
+comes to open water areas: The SAR classification shows
+several open water areas in the coastal inlets, where the sea
+ice appears dark in the SAR scene. In the fusion
+classification, these open water areas disappear, in agreement
+to the optical classification.
+
+104
+Authorized licensed use limited to: University of Texas of the Permian Basin. Downloaded on December 13,2025 at 06:58:54 UTC from IEEE Xplore. Restrictions apply.
+
+Figure 7: Example for a fused classification product
+from 2020-04-07 at the east coast of Greenland. (a)
+Sentinel-1 SAR scene, (b) SAR-only classification, (c)
+Sentinel-3 classification, (d) fused classification.
+
+Figure 6: Example for a fused classification product
+from 2020-06-05 in the Fram Strait. (a) Sentinel-1 SAR
+scene, (b) SAR-only classification, (c) Sentinel-3
+classification, (d) fused classification.
+
+The time difference between the SAR and optical acquisitions
+may cause inconsistencies in the observed sea ice situation
+caused by sea ice drift. In retrospect, a sea ice drift
+compensation such as presented in [7,8] can be included to
+enable the fusion of several sequential SAR acquisitions and
+stabilize the classification. For near real-time applications, an
+approach to compensate for this is to morph the respective
+scenes or classifications using sea ice drift forecast model
+data [9].
+The classifications presented here are integrated in an
+operational processing chain and an end-user application
+specifically developed for the use aboard of polar operating
+ships (icysea.app developed by Drift & Noise Polar Systems).
+This contributes to the safety of scientific and commercial
+shipping in ice-infested waters.
+
+6. SUMMARY AND OUTLOOK
+In this contribution, we present a sensor data fusion approach
+to improve the task of sea ice type classification. Two
+spaceborne sensors are used: SAR from Sentinel-1 and
+SLSTR from Sentinel-3. SAR and SLSTR data yield very
+different information about the sea ice situation. SAR
+backscatter depends mainly on sea ice surface roughness and
+topography, and the radar signals easily penetrate clouds.
+Optical sensors measure the reflected sunlight in different
+bands which, for SLSTR, also include thermal information.
+Both sensor sources are combined to form a fused
+classification, whereby the respective information is utilized.
+For this fusion, we use a CNN with a UNET++ architecture.
+Our results show that in their current status, most areas
+align well between the classifications and open water is better
+distinguished in the fusion classification. In some areas, the
+fusion classification is likely overestimating the true sea ice
+thickness. Further training could improve this behavior.
+However, judging the correct classification is a challenge in
+the remote Arctic areas due to the lack of true ground truth
+data.
+Other approaches for fusion on a product level might be
+considered in future work, e.g., Kalman filter or Bayesian
+networks.
+
+ACKNOWLEDGEMENTS
+The work described herein was carried out in the scope of the
+BMDV-funded mFUND project EisKlass2, FKZ 19F2122A.
+Figures 2, 6 and 7 contain modified Copernicus Sentinel-1
+and Sentinel-3 data, 2020 and 2022.
+REFERENCES
+[1] Onstott, R. G., & Shuchman, R. A. (2004). “SAR measurements
+of sea ice”. Synthetic Aperture Radar Marine User’s Manual.
+Washington, DC: NOAA, 81-115.
+
+105
+Authorized licensed use limited to: University of Texas of the Permian Basin. Downloaded on December 13,2025 at 06:58:54 UTC from IEEE Xplore. Restrictions apply.
+
+[2] Ressel, R., Frost, A., & Lehner, S. (2015). “Navigation assistance
+for ice-infested waters through automatic iceberg detection and ice
+classification based on TerraSAR-X imagery”. The International
+Archives of Photogrammetry, Remote Sensing and Spatial
+Information Sciences, 40(7), 1049.
+[3] Zakhvatkina, N., Smirnov, V., & Bychkova, I. (2019). “Satellite
+SAR data-based sea ice classification: An overview”. Geosciences,
+9(4), 152.
+[4] Kortum, K., Singha, S., & Spreen, G. (2022). „Robust
+Multiseasonal Ice Classification From High-Resolution X-Band
+SAR”. IEEE Transactions on Geoscience and Remote Sensing, 60,
+1-12.
+[5] C. König, T. König, S. Singha, A. Frost, and S. Jacobsen,
+“Combined Use of Space Borne Optical and SAR Data to Improve
+Knowledge about Sea Ice for Shipping,” Remote Sensing, vol. 13,
+no. 23, 2021
+[6] D. Murashkin and A. Frost, “Arctic Sea ICE Mapping Using
+Sentinel-1 SAR Scenes with a Convolutional Neural Network,” In
+2021 IEEE International Geoscience and Remote Sensing
+Symposium IGARSS, 2021, pp. 5660–5663.
+[7] Wiercioch, M., Frost, A., & Singha, S. (2019).”Superposition of
+Sea Ice Classification Based on Synthetic Aperture Radar Images
+Considering Underlying Drift”. In IEEE International Geoscience
+and Remote Sensing Symposium IGARSS 2019, pp. 4206-4209.
+IEEE.
+[8] Frost, A., Imber, J., Murashkin, D., Gregorek, D., & Bathmann,
+M. (2023). “Phase-Correlation Based Sea Ice Motion Tracking and
+Classification Using Spaceborne SAR Imagery”. In OCEANS 2023Limerick. IEEE.
+[9] Bathmann, M., Murashkin, D., Schmitz, B., Frost, A., Wiehle,
+S., Ludwig, V., Spreen, G. (2023). „Sea Ice Data for Shipping
+Routes”. AGU23, 2023-12-11 - 2023-12-15, San Francisco, CA,
+USA
+
+106
+Authorized licensed use limited to: University of Texas of the Permian Basin. Downloaded on December 13,2025 at 06:58:54 UTC from IEEE Xplore. Restrictions apply.
+
+
